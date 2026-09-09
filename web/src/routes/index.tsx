@@ -151,13 +151,9 @@ const mockEntries: MockEntry[] = [
   { id: 'lokal-preview', group: 'lokal', label: 'Wrangler', chip: 'web', detail: 'workerd · 62201', port: '4179' },
   { id: 'store-web', group: 'storefront', label: 'Next.js', chip: 'web', detail: 'next-server · 40312', port: '3000' },
   { id: 'store-api', group: 'storefront', label: 'Rails', chip: 'api', detail: 'puma · 40388', port: '3001' },
-  { id: 'store-db', group: 'Containers', label: 'storefront-db', detail: 'postgres:16', port: '5433' },
-  { id: 'store-redis', group: 'Containers', label: 'storefront-redis', detail: 'redis:7', port: '6380' },
-  { id: 'postgres', group: 'Services', label: 'Postgres', detail: 'postgres · 812', port: '5432' },
-  { id: 'ollama', group: 'Services', label: 'Ollama', detail: 'ollama · 1190', port: '11434' },
 ]
 
-const groups = ['lokal', 'storefront', 'Containers', 'Services']
+const groups = ['lokal', 'storefront']
 
 /** A working miniature of the panel: foldable groups, a kill control that morphs on mouse down, rows that come back. */
 function MockPanel() {
