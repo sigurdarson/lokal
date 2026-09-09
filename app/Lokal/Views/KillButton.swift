@@ -56,11 +56,7 @@ struct KillButton: View {
             }
 
             Button {
-                if confirming {
-                    model.cancelConfirmation(entry.id)
-                } else {
-                    model.requestKill(entry, skipConfirmation: NSEvent.modifierFlags.contains(.option))
-                }
+                if confirming { model.cancelConfirmation(entry.id) }
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: confirming ? 9 : 12, weight: confirming ? .bold : .medium))
@@ -70,7 +66,13 @@ struct KillButton: View {
                     .frame(width: confirming ? 22 : Theme.iconButtonSize, height: Theme.iconButtonSize)
                     .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .buttonStyle(
+                PressButtonStyle {
+                    // Opening the capsule happens on press so the morph starts with no perceptible delay.
+                    guard !confirming else { return }
+                    model.requestKill(entry, skipConfirmation: NSEvent.modifierFlags.contains(.option))
+                }
+            )
             .keyboardShortcut(confirming ? .cancelAction : nil)
             .help(confirming ? "Cancel" : "Kill process (Option-click to skip confirmation)")
             .accessibilityLabel(confirming ? "Cancel" : "Kill \(entry.label)")
