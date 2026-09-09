@@ -105,6 +105,10 @@ Website:
 cd web && pnpm install && pnpm dev
 ```
 
+## Releases
+
+Tagged releases are built, signed and notarized by GitHub Actions. The same run publishes the GitHub Release, updates the Sparkle appcast and download redirect on the website, and pushes the cask to the tap. See [CONTRIBUTING.md](CONTRIBUTING.md#releasing-maintainers).
+
 ## Privacy
 
 Lokal makes no network requests except to `lokal.sigurdarson.is/appcast.xml` for update checks, which you can disable in Settings. Nothing is collected or sent anywhere.
