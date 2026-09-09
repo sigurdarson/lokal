@@ -2,10 +2,33 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '~/components/Button'
 import { CopyButton } from '~/components/CopyButton'
 import { MenuBarClock } from '~/components/MenuBarClock'
+import { siteURL, socialMeta } from '~/routes/__root'
 import { useEffect, useState } from 'react'
 import styles from '~/components/Home.module.css'
 
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Lokal',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS 15 or later',
+  url: siteURL + '/',
+  downloadUrl: siteURL + '/download',
+  installUrl: siteURL + '/download',
+  softwareHelp: 'https://github.com/sigurdarson/lokal#readme',
+  license: 'https://opensource.org/licenses/MIT',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: { '@type': 'Person', name: 'G. Sigurdarson', url: 'https://sigurdarson.is' },
+  description:
+    'A free, open source macOS menu bar app that lists your localhost ports, the process behind each one, and the project it belongs to.',
+}
+
 export const Route = createFileRoute('/')({
+  head: () => ({
+    ...socialMeta('Lokal: see what is running on localhost', structuredData.description, '/'),
+    scripts: [{ type: 'application/ld+json', children: JSON.stringify(structuredData) }],
+  }),
   component: Home,
 })
 
@@ -35,7 +58,6 @@ function Home() {
 
       <section className={styles.outcomes} id="what-it-does">
         <div className={styles.outcomesIntro}>
-          <p className={styles.eyebrowLabel}>What it does</p>
           <h2 className={styles.outcomesTitle}>Everything listening, with the context you actually need.</h2>
           <p className={styles.outcomesLede}>
             Dev servers, databases, containers and the odd forgotten process pile up over a day. Lokal shows what is
@@ -151,20 +173,15 @@ const mockEntries: MockEntry[] = [
   { id: 'lokal-preview', group: 'lokal', label: 'Wrangler', chip: 'web', detail: 'workerd · 62201', port: '4179' },
   { id: 'store-web', group: 'storefront', label: 'Next.js', chip: 'web', detail: 'next-server · 40312', port: '3000' },
   { id: 'store-api', group: 'storefront', label: 'Rails', chip: 'api', detail: 'puma · 40388', port: '3001' },
-  { id: 'store-db', group: 'Containers', label: 'storefront-db', detail: 'postgres:16', port: '5433' },
-  { id: 'store-redis', group: 'Containers', label: 'storefront-redis', detail: 'redis:7', port: '6380' },
-  { id: 'postgres', group: 'Services', label: 'Postgres', detail: 'postgres · 812', port: '5432' },
-  { id: 'ollama', group: 'Services', label: 'Ollama', detail: 'ollama · 1190', port: '11434' },
 ]
 
-const groups = ['lokal', 'storefront', 'Containers', 'Services']
-const hiddenPerGroup: Record<string, number> = { lokal: 2, storefront: 3 }
-const hiddenTotal = 27
+const groups = ['lokal', 'storefront']
 
-/** A working miniature of the panel. Kill asks for confirmation, removes the row, and everything comes back later. */
+/** A working miniature of the panel: foldable groups, a kill control that morphs on mouse down, rows that come back. */
 function MockPanel() {
   const [confirming, setConfirming] = useState<string | null>(null)
   const [killed, setKilled] = useState<string[]>([])
+  const [collapsed, setCollapsed] = useState<string[]>([])
 
   useEffect(() => {
     if (confirming === null) return
@@ -185,7 +202,7 @@ function MockPanel() {
       <div className={styles.panelHeader}>
         <span className={styles.panelTitle}>Lokal</span>
         <span className={styles.panelCount}>
-          {visible.length} {visible.length === 1 ? 'port' : 'ports'} · {hiddenTotal} hidden
+          {visible.length} {visible.length === 1 ? 'port' : 'ports'}
         </span>
         <span className={styles.panelRefresh} aria-hidden="true">
           <RefreshGlyph />
@@ -194,23 +211,36 @@ function MockPanel() {
       {groups.map((group) => {
         const entries = visible.filter((entry) => entry.group === group)
         if (entries.length === 0) return null
+        const folded = collapsed.includes(group)
         return (
           <div key={group}>
-            <div className={styles.group}>{group}</div>
-            {entries.map((entry) => (
-              <Row
-                key={entry.id}
-                entry={entry}
-                confirming={confirming === entry.id}
-                onRequestKill={() => setConfirming(entry.id)}
-                onCancel={() => setConfirming(null)}
-                onConfirm={() => {
-                  setConfirming(null)
-                  setKilled((current) => [...current, entry.id])
-                }}
-              />
-            ))}
-            {hiddenPerGroup[group] ? <div className={styles.more}>{hiddenPerGroup[group]} hidden ports</div> : null}
+            <button
+              type="button"
+              className={styles.group}
+              aria-expanded={!folded}
+              onClick={() =>
+                setCollapsed((current) => (folded ? current.filter((id) => id !== group) : [...current, group]))
+              }
+            >
+              <ChevronGlyph className={`${styles.groupChevron} ${folded ? styles.groupChevronFolded : ''}`} />
+              <span>{group}</span>
+              {folded ? <span className={styles.groupCount}>{entries.length}</span> : null}
+            </button>
+            {folded
+              ? null
+              : entries.map((entry) => (
+                  <Row
+                    key={entry.id}
+                    entry={entry}
+                    confirming={confirming === entry.id}
+                    onRequestKill={() => setConfirming(entry.id)}
+                    onCancel={() => setConfirming(null)}
+                    onConfirm={() => {
+                      setConfirming(null)
+                      setKilled((current) => [...current, entry.id])
+                    }}
+                  />
+                ))}
           </div>
         )
       })}
@@ -250,38 +280,60 @@ function Row({
           <span className={styles.port}>{entry.port}</span> · {entry.detail}
         </div>
       </div>
-      {confirming ? (
-        <div className={styles.killConfirm}>
-          <button type="button" className={styles.killConfirmAction} onClick={onConfirm}>
-            Kill
-          </button>
-          <button type="button" className={styles.killConfirmCancel} onClick={onCancel} aria-label="Cancel">
-            <CloseGlyph />
-          </button>
-        </div>
-      ) : (
-        <div className={styles.rowActions}>
-          <a
-            className={styles.iconButton}
-            href={`http://localhost:${entry.port}`}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Open localhost:${entry.port} in a new tab`}
-            onClick={(event) => event.preventDefault()}
-          >
-            <OpenGlyph />
-          </a>
+      <div className={styles.rowActions}>
+        <a
+          className={`${styles.iconButton} ${confirming ? styles.iconButtonHidden : ''}`}
+          href={`http://localhost:${entry.port}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open localhost:${entry.port} in a new tab`}
+          aria-hidden={confirming}
+          tabIndex={confirming ? -1 : 0}
+          onClick={(event) => event.preventDefault()}
+        >
+          <OpenGlyph />
+        </a>
+        <div className={`${styles.killControl} ${confirming ? styles.killConfirming : ''}`}>
+          {confirming ? (
+            <button type="button" className={styles.killAction} onClick={onConfirm}>
+              Kill
+            </button>
+          ) : null}
           <button
             type="button"
-            className={`${styles.iconButton} ${styles.killButton}`}
-            onClick={onRequestKill}
-            aria-label={`Kill ${entry.label}`}
+            className={styles.killToggle}
+            aria-label={confirming ? 'Cancel' : `Kill ${entry.label}`}
+            onMouseDown={(event) => {
+              // Open on mouse down so the morph starts with no perceptible delay, as in the app.
+              if (!confirming) {
+                event.preventDefault()
+                onRequestKill()
+              }
+            }}
+            onClick={() => {
+              if (confirming) onCancel()
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape' && confirming) onCancel()
+              if ((event.key === 'Enter' || event.key === ' ') && !confirming) {
+                event.preventDefault()
+                onRequestKill()
+              }
+            }}
           >
             <CloseGlyph />
           </button>
         </div>
-      )}
+      </div>
     </div>
+  )
+}
+
+function ChevronGlyph({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" />
+    </svg>
   )
 }
 

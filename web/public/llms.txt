@@ -1,0 +1,31 @@
+# Lokal
+
+> Lokal is a free, open source macOS menu bar app that lists every port your machine is listening on, the process behind each one, and the project it belongs to. It recognises common services and lets you open, copy, reveal, or kill each one from the menu bar. No accounts, no telemetry.
+
+Requirements: macOS 15 or later on Apple silicon. Signed and notarized. MIT licensed.
+
+Install with Homebrew: `brew install sigurdarson/tap/lokal`, or download the .dmg from https://lokal.sigurdarson.is/download
+
+## How it works
+
+- Listening TCP sockets are enumerated natively with libproc (proc_listpids, proc_pidinfo, proc_pidfdinfo). No lsof, no shell.
+- Each process's working directory is resolved to the nearest manifest (package.json, Package.swift, Cargo.toml, pyproject.toml, go.mod, Gemfile, and more) and git root, so ports group by project.
+- Well-known services (Postgres, MySQL, Redis, MongoDB, Vite, Next.js, Rails, Django, Docker and OrbStack containers, and others) are matched from a JSON catalog that anyone can extend.
+- Debug inspectors, ephemeral sockets, GUI apps and system daemons are hidden by default; a setting shows them.
+- Actions per port: open in browser, copy URL, reveal in Finder, open in editor or terminal, kill with inline confirmation.
+- Updates come through Sparkle from https://lokal.sigurdarson.is/appcast.xml, the only network request the app makes.
+
+## Pages
+
+- [Home](https://lokal.sigurdarson.is/): what Lokal does and how to install it
+- [Changelog](https://lokal.sigurdarson.is/changelog): release notes, generated from CHANGELOG.md
+- [Download](https://lokal.sigurdarson.is/download): redirects to the latest .dmg
+
+## Source
+
+- [Repository](https://github.com/sigurdarson/lokal): monorepo with the app, website, Homebrew cask and release workflows
+- [README](https://github.com/sigurdarson/lokal/blob/main/README.md): install, project detection, service definitions
+- [CHANGELOG.md](https://github.com/sigurdarson/lokal/blob/main/CHANGELOG.md)
+- [Service catalog](https://github.com/sigurdarson/lokal/blob/main/app/LokalCore/Sources/LokalCore/Services/services.json): the recognised services, in JSON
+- [Homebrew tap](https://github.com/sigurdarson/homebrew-tap)
+- [Issues](https://github.com/sigurdarson/lokal/issues)

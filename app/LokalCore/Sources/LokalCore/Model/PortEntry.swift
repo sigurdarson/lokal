@@ -72,11 +72,10 @@ public struct PortEntry: Sendable, Hashable, Identifiable {
         return process.name
     }
 
-    /// Secondary text for the row.
+    /// Secondary text for the row: the image for a container, otherwise process name and pid.
     public var detail: String {
-        var parts = [process.name, "PID \(process.pid)"]
-        if let container { parts.append(container.image) }
-        return parts.joined(separator: " · ")
+        if let container { return container.image }
+        return "\(process.name) · \(process.pid)"
     }
 
     /// SF Symbol for the row.

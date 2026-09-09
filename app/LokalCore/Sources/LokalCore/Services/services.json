@@ -27,7 +27,7 @@
     { "id": "expo", "name": "Expo", "kind": "dev-server", "icon": "iphone", "ports": [8081, 19000], "commandPatterns": ["(^|/)expo(\\.js)?\\s+start|metro"] },
     { "id": "wrangler", "name": "Wrangler", "kind": "dev-server", "icon": "cloud", "ports": [8787], "commandPatterns": ["(^|/)wrangler(\\.js)?\\s+(dev|pages)"] },
     { "id": "workerd", "name": "workerd", "kind": "dev-server", "icon": "cloud", "processNames": ["workerd"] },
-    { "id": "node-inspector", "name": "Node inspector", "kind": "tool", "icon": "ladybug", "ports": [9229, 9230, 9231, 9232], "openInBrowser": false, "auxiliary": true },
+    { "id": "node-inspector", "name": "Node inspector", "kind": "tool", "icon": "ladybug", "ports": [9229, 9230, 9231, 9232, 9233, 9234, 9235, 9236, 9237, 9238, 9239], "openInBrowser": false, "auxiliary": true },
     { "id": "python-debugger", "name": "Python debugger", "kind": "tool", "icon": "ladybug", "ports": [5678], "openInBrowser": false, "auxiliary": true },
     { "id": "rails", "name": "Rails", "kind": "dev-server", "icon": "diamond", "ports": [3000], "processNames": ["puma"], "commandPatterns": ["(^|/)(rails|puma|unicorn)(\\s|$)|bin/rails"] },
     { "id": "django", "name": "Django", "kind": "dev-server", "icon": "leaf", "ports": [8000], "commandPatterns": ["manage\\.py\\s+runserver|django"] },

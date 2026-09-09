@@ -3,7 +3,6 @@
   top: 0;
   z-index: 10;
   backdrop-filter: saturate(180%) blur(1rem);
-  -webkit-backdrop-filter: saturate(180%) blur(1rem);
   background: color-mix(in oklch, var(--surface-page) 80%, transparent);
 }
 

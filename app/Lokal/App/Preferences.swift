@@ -10,6 +10,7 @@ final class Preferences {
         static let editorBundleID = "editorBundleID"
         static let terminalBundleID = "terminalBundleID"
         static let showsAuxiliaryPorts = "showsAuxiliaryPorts"
+        static let collapsedGroups = "collapsedGroups"
     }
 
     private let defaults: UserDefaults
@@ -33,6 +34,11 @@ final class Preferences {
         didSet { defaults.set(terminalBundleID, forKey: Key.terminalBundleID) }
     }
 
+    /// Group ids the user folded. Remembered across launches.
+    var collapsedGroups: Set<String> {
+        didSet { defaults.set(Array(collapsedGroups).sorted(), forKey: Key.collapsedGroups) }
+    }
+
     /// Always list auxiliary ports (inspectors, ephemeral sockets, apps, system daemons) instead of folding them per group.
     var showsAuxiliaryPorts: Bool {
         didSet { defaults.set(showsAuxiliaryPorts, forKey: Key.showsAuxiliaryPorts) }
@@ -45,5 +51,6 @@ final class Preferences {
         editorBundleID = defaults.string(forKey: Key.editorBundleID) ?? ""
         terminalBundleID = defaults.string(forKey: Key.terminalBundleID) ?? ""
         showsAuxiliaryPorts = defaults.bool(forKey: Key.showsAuxiliaryPorts)
+        collapsedGroups = Set(defaults.stringArray(forKey: Key.collapsedGroups) ?? [])
     }
 }

@@ -19,7 +19,7 @@ struct LokalApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            PanelView(updaterModel: updaterModel)
+            PanelView()
                 .environment(model)
         } label: {
             MenuBarLabel(count: model.listeningCount, showsBadge: model.preferences.showsBadge)

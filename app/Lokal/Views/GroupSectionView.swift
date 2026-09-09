@@ -1,77 +1,64 @@
 import LokalCore
 import SwiftUI
 
-/// A section header, its primary rows, and a disclosure for the auxiliary ones.
+/// A foldable group: its label is a button, its rows follow. Hidden ports appear only when the setting is on.
 struct GroupSectionView: View {
     @Environment(AppModel.self) private var model
     let group: ProjectGroup
 
-    private var showsAll: Bool {
-        model.preferences.showsAuxiliaryPorts || model.isExpanded(group.id)
-    }
+    private var collapsed: Bool { model.isCollapsed(group.id) }
 
     var body: some View {
         Section {
-            ForEach(group.primaryEntries) { entry in
-                PortRowView(entry: entry)
-            }
-            if showsAll {
-                ForEach(group.auxiliaryEntries) { entry in
+            if !collapsed {
+                ForEach(group.primaryEntries) { entry in
                     PortRowView(entry: entry)
-                        .opacity(0.72)
+                }
+                if model.preferences.showsAuxiliaryPorts {
+                    ForEach(group.auxiliaryEntries) { entry in
+                        PortRowView(entry: entry)
+                            .opacity(0.72)
+                    }
                 }
             }
-            if !group.auxiliaryEntries.isEmpty, !model.preferences.showsAuxiliaryPorts {
-                disclosure
-            }
         } header: {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(group.title)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
-                Spacer()
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 5)
-            .background(.bar)
+            header
         }
     }
 
-    private var disclosure: some View {
-        let count = group.auxiliaryEntries.count
-        let expanded = model.isExpanded(group.id)
-        let noun = count == 1 ? "hidden port" : "hidden ports"
-        return Button {
-            model.toggleExpanded(group.id)
+    private var header: some View {
+        Button {
+            model.toggleCollapsed(group.id)
         } label: {
-            HStack(spacing: 5) {
-                Image(systemName: "chevron.right")
+            HStack(spacing: 6) {
+                Image(systemName: "chevron.down")
                     .font(.system(size: 9, weight: .semibold))
-                    .rotationEffect(.degrees(expanded ? 90 : 0))
-                Text(verbatim: expanded ? "Hide \(count) \(noun)" : "\(count) \(noun)")
+                    .rotationEffect(.degrees(collapsed ? -90 : 0))
+                Text(group.title)
+                    .lineLimit(1)
                 Spacer()
+                if collapsed {
+                    Text(verbatim: String(visibleCount))
+                        .contentTransition(.numericText())
+                }
             }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            .font(Theme.label)
+            .foregroundStyle(Theme.textAA)
+            .padding(.horizontal, 16)
+            .padding(.top, 10)
+            .padding(.bottom, 10)
+            .frame(maxWidth: .infinity)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .padding(.leading, 48)
-        .padding(.trailing, 16)
-        .padding(.vertical, 5)
-        .help("Debug inspectors, ephemeral sockets, apps and system services. Not part of a project.")
-        .accessibilityLabel(expanded ? "Hide \(count) hidden ports" : "Show \(count) hidden ports")
+        .hoverWash()
+        .animation(Theme.fast, value: collapsed)
+        .help(collapsed ? "Show this group" : "Hide this group")
+        .accessibilityLabel(collapsed ? "Show \(group.title)" : "Hide \(group.title)")
+        .accessibilityAddTraits(.isHeader)
     }
 
-    private var icon: String {
-        switch group.kind {
-        case .project: "folder"
-        case .containers: "shippingbox"
-        case .services: "server.rack"
-        case .other: "ellipsis.circle"
-        }
+    private var visibleCount: Int {
+        model.preferences.showsAuxiliaryPorts ? group.entries.count : group.primaryEntries.count
     }
 }
