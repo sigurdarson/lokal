@@ -35,7 +35,6 @@
 .releases {
   display: grid;
   gap: var(--space-4);
-  max-width: 48rem;
 }
 
 .release {
@@ -83,6 +82,7 @@
 .items {
   margin: 0;
   padding-left: 1.2em;
+  max-width: var(--measure);
   color: var(--text-muted-aaa);
   font-size: var(--font-size-sm);
 }
