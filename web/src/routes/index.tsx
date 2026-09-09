@@ -21,9 +21,11 @@ function Home() {
         </p>
         <div className={styles.actions}>
           <Button render={<a href="/download" />}>Download for macOS</Button>
-          <a className={styles.textLink} href="#what-it-does">
-            See what it does <span aria-hidden="true">→</span>
-          </a>
+          <div className={styles.brew}>
+            <span>$</span>
+            <code>{brew}</code>
+            <CopyButton text={brew} />
+          </div>
         </div>
         <p className={styles.requirements}>macOS 15 or later on Apple silicon. Signed and notarized. No account, no telemetry.</p>
       </section>
@@ -63,13 +65,8 @@ function Home() {
         <ol className={styles.steps}>
           <li>
             <span>
-              <strong>Install</strong> with Homebrew, or download the <a href="/download">.dmg</a> and drag Lokal to
-              Applications.
-              <span className={styles.brew}>
-                <span>$</span>
-                <code>{brew}</code>
-                <CopyButton text={brew} />
-              </span>
+              <strong>Install</strong> with <code>{brew}</code>, or download the <a href="/download">.dmg</a> and
+              drag Lokal to Applications.
             </span>
           </li>
           <li>
