@@ -2,6 +2,7 @@ import AppKit
 import Foundation
 import LokalCore
 import Observation
+import SwiftUI
 
 /// Per-row kill progress. Absent means idle.
 enum KillState: Equatable {
