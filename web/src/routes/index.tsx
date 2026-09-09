@@ -222,9 +222,10 @@ function Row({
           {label}
           {chip ? <span className={styles.chip}>{chip}</span> : null}
         </div>
-        <div className={styles.rowDetail}>{detail}</div>
+        <div className={styles.rowDetail}>
+          <span className={styles.port}>{port}</span> · {detail}
+        </div>
       </div>
-      <div className={styles.port}>{port}</div>
       {confirm ? (
         <div className={styles.killConfirm}>
           <b>Kill</b>
