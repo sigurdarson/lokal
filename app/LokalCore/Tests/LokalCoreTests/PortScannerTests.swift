@@ -13,7 +13,7 @@ struct FixtureProcesses: ProcessInspecting {
     func details(for pid: pid_t) -> ProcessDetails? { processes[pid] }
 }
 
-@Suite("Scanner")
+@Suite("PortScanner")
 struct ScannerTests {
     @Test("Builds entries with services and projects; skips vanished processes; uses ancestor cwd")
     func snapshot() async throws {
@@ -37,7 +37,7 @@ struct ScannerTests {
             200: ProcessDetails(
                 pid: 200, name: "postgres", workingDirectory: "/opt/homebrew/var/pg", parentPID: 1, startTime: 1),
         ])
-        let scanner = Scanner(
+        let scanner = PortScanner(
             socketSource: sockets,
             processInspector: processes,
             projectResolver: ProjectResolver(homeDirectory: tree.home.path),
@@ -67,7 +67,7 @@ struct ScannerTests {
 
     @Test("Real scan on this machine does not crash and returns sorted entries")
     func realScan() async {
-        let snapshot = await Scanner(dockerInspector: nil).snapshot()
+        let snapshot = await PortScanner(dockerInspector: nil).snapshot()
         #expect(snapshot.entries.map(\.port) == snapshot.entries.map(\.port).sorted())
         for entry in snapshot.entries {
             #expect(!entry.label.isEmpty)
