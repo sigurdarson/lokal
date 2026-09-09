@@ -159,10 +159,11 @@ const mockEntries: MockEntry[] = [
 
 const groups = ['lokal', 'storefront', 'Containers', 'Services']
 
-/** A working miniature of the panel. Kill asks for confirmation, removes the row, and everything comes back later. */
+/** A working miniature of the panel: foldable groups, a kill control that morphs on mouse down, rows that come back. */
 function MockPanel() {
   const [confirming, setConfirming] = useState<string | null>(null)
   const [killed, setKilled] = useState<string[]>([])
+  const [collapsed, setCollapsed] = useState<string[]>([])
 
   useEffect(() => {
     if (confirming === null) return
@@ -192,22 +193,36 @@ function MockPanel() {
       {groups.map((group) => {
         const entries = visible.filter((entry) => entry.group === group)
         if (entries.length === 0) return null
+        const folded = collapsed.includes(group)
         return (
           <div key={group}>
-            <div className={styles.group}>{group}</div>
-            {entries.map((entry) => (
-              <Row
-                key={entry.id}
-                entry={entry}
-                confirming={confirming === entry.id}
-                onRequestKill={() => setConfirming(entry.id)}
-                onCancel={() => setConfirming(null)}
-                onConfirm={() => {
-                  setConfirming(null)
-                  setKilled((current) => [...current, entry.id])
-                }}
-              />
-            ))}
+            <button
+              type="button"
+              className={styles.group}
+              aria-expanded={!folded}
+              onClick={() =>
+                setCollapsed((current) => (folded ? current.filter((id) => id !== group) : [...current, group]))
+              }
+            >
+              <ChevronGlyph className={`${styles.groupChevron} ${folded ? styles.groupChevronFolded : ''}`} />
+              <span>{group}</span>
+              {folded ? <span className={styles.groupCount}>{entries.length}</span> : null}
+            </button>
+            {folded
+              ? null
+              : entries.map((entry) => (
+                  <Row
+                    key={entry.id}
+                    entry={entry}
+                    confirming={confirming === entry.id}
+                    onRequestKill={() => setConfirming(entry.id)}
+                    onCancel={() => setConfirming(null)}
+                    onConfirm={() => {
+                      setConfirming(null)
+                      setKilled((current) => [...current, entry.id])
+                    }}
+                  />
+                ))}
           </div>
         )
       })}
@@ -247,38 +262,60 @@ function Row({
           <span className={styles.port}>{entry.port}</span> · {entry.detail}
         </div>
       </div>
-      {confirming ? (
-        <div className={styles.killConfirm}>
-          <button type="button" className={styles.killConfirmAction} onClick={onConfirm}>
-            Kill
-          </button>
-          <button type="button" className={styles.killConfirmCancel} onClick={onCancel} aria-label="Cancel">
-            <CloseGlyph />
-          </button>
-        </div>
-      ) : (
-        <div className={styles.rowActions}>
-          <a
-            className={styles.iconButton}
-            href={`http://localhost:${entry.port}`}
-            target="_blank"
-            rel="noreferrer"
-            aria-label={`Open localhost:${entry.port} in a new tab`}
-            onClick={(event) => event.preventDefault()}
-          >
-            <OpenGlyph />
-          </a>
+      <div className={styles.rowActions}>
+        <a
+          className={`${styles.iconButton} ${confirming ? styles.iconButtonHidden : ''}`}
+          href={`http://localhost:${entry.port}`}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open localhost:${entry.port} in a new tab`}
+          aria-hidden={confirming}
+          tabIndex={confirming ? -1 : 0}
+          onClick={(event) => event.preventDefault()}
+        >
+          <OpenGlyph />
+        </a>
+        <div className={`${styles.killControl} ${confirming ? styles.killConfirming : ''}`}>
+          {confirming ? (
+            <button type="button" className={styles.killAction} onClick={onConfirm}>
+              Kill
+            </button>
+          ) : null}
           <button
             type="button"
-            className={`${styles.iconButton} ${styles.killButton}`}
-            onClick={onRequestKill}
-            aria-label={`Kill ${entry.label}`}
+            className={styles.killToggle}
+            aria-label={confirming ? 'Cancel' : `Kill ${entry.label}`}
+            onMouseDown={(event) => {
+              // Open on mouse down so the morph starts with no perceptible delay, as in the app.
+              if (!confirming) {
+                event.preventDefault()
+                onRequestKill()
+              }
+            }}
+            onClick={() => {
+              if (confirming) onCancel()
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape' && confirming) onCancel()
+              if ((event.key === 'Enter' || event.key === ' ') && !confirming) {
+                event.preventDefault()
+                onRequestKill()
+              }
+            }}
           >
             <CloseGlyph />
           </button>
         </div>
-      )}
+      </div>
     </div>
+  )
+}
+
+function ChevronGlyph({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" />
+    </svg>
   )
 }
 

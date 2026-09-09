@@ -176,10 +176,37 @@
 }
 
 .group {
-  padding: var(--space-3) var(--space-4) var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  width: 100%;
+  padding: 0.625rem var(--space-4);
+  border: 0;
+  background: transparent;
+  font: inherit;
   font-size: var(--font-size-xs);
   font-weight: 600;
   color: var(--text-aa);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.group:hover {
+  background: var(--surface-hover-decorative);
+}
+
+.groupChevron {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.groupChevronFolded {
+  transform: rotate(-90deg);
+}
+
+.groupCount {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
 }
 
 .row {
@@ -231,6 +258,7 @@
 
 .rowActions {
   display: flex;
+  align-items: center;
   gap: var(--space-1);
 }
 
@@ -248,7 +276,10 @@
   text-decoration: none;
   transition:
     color var(--duration-fast) var(--ease-standard),
-    background-color var(--duration-fast) var(--ease-standard);
+    background-color var(--duration-fast) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard),
+    width var(--duration-pop) var(--ease-spring),
+    margin var(--duration-pop) var(--ease-spring);
 }
 
 .iconButton:hover {
@@ -264,66 +295,107 @@
   transform: scale(1.15);
 }
 
-/* The kill control winds up on hover and pops the capsule open on click. */
-.killButton:hover svg {
-  transform: scale(1.2) rotate(90deg);
+.iconButtonHidden {
+  opacity: 0;
+  width: 0;
+  margin-left: calc(var(--space-1) * -1);
+  pointer-events: none;
 }
 
-.killButton:active svg {
-  transform: scale(0.9) rotate(90deg);
-}
-
-.killConfirm {
-  justify-self: end;
+/* One persistent control: a rounded square that stretches into the inverse capsule on mouse down. */
+.killControl {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--nontext-aa);
+  overflow: hidden;
+  transition:
+    width var(--duration-pop) var(--ease-spring),
+    border-radius var(--duration-pop) var(--ease-spring),
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.killControl:hover {
+  color: var(--text-aaa);
+  background: var(--surface-hover-decorative);
+}
+
+.killConfirming,
+.killConfirming:hover {
+  width: 4.25rem;
+  border-radius: var(--radius-full);
   background: var(--surface-inverse);
   color: var(--text-on-inverse-aaa);
-  border-radius: var(--radius-full);
-  height: 1.5rem;
-  overflow: hidden;
-  transform-origin: right center;
-  animation: pop var(--duration-pop) var(--ease-spring) both;
 }
 
-@keyframes pop {
-  from {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.killConfirmAction,
-.killConfirmCancel {
+.killAction,
+.killToggle {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   height: 100%;
   border: 0;
   background: transparent;
   color: inherit;
+  font: inherit;
   cursor: pointer;
+  padding: 0;
 }
 
-.killConfirmAction {
-  padding: 0 0.625rem;
+.killAction {
+  flex: 1;
+  padding-left: 0.625rem;
   font-size: 0.6875rem;
   font-weight: 600;
+  white-space: nowrap;
+  animation: slideIn var(--duration-pop) var(--ease-spring) both;
 }
 
-.killConfirmAction:hover {
+.killAction:hover {
   background: color-mix(in oklch, var(--text-on-inverse-aaa) 12%, transparent);
 }
 
-.killConfirmCancel {
-  padding: 0 var(--space-2) 0 0.375rem;
+@keyframes slideIn {
+  from {
+    transform: translateX(0.5rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.killToggle {
+  width: 1.5rem;
+  flex: none;
+}
+
+.killToggle svg {
+  transition:
+    transform var(--duration-pop) var(--ease-spring),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+
+.killControl:not(.killConfirming):hover .killToggle svg {
+  transform: scale(1.2) rotate(90deg);
+}
+
+.killConfirming .killToggle {
+  width: 1.375rem;
+}
+
+.killConfirming .killToggle svg {
+  transform: scale(0.8);
   opacity: 0.7;
 }
 
-.killConfirmCancel:hover {
+.killConfirming .killToggle:hover svg {
   opacity: 1;
 }
 
