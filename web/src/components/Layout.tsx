@@ -19,22 +19,14 @@ export function Header() {
           <Button variant="secondary" size="compact" render={<Link to="/changelog" />}>
             Changelog
           </Button>
-          {latest ? (
-            <Button
-              variant="secondary"
-              size="compact"
-              render={<a href={latest.url ?? `https://github.com/sigurdarson/lokal/releases/tag/v${latest.version}`} />}
-              title={`Version ${latest.version}${latest.date ? `, released ${latest.date}` : ''}`}
-            >
-              v{latest.version}
-            </Button>
-          ) : null}
           <Button
             variant="secondary"
             size="compact"
-            render={<a href="https://github.com/sigurdarson/lokal" aria-label="Lokal on GitHub" />}
+            render={<a href="https://github.com/sigurdarson/lokal" />}
+            title={latest ? `Version ${latest.version}, released ${latest.date}` : 'Lokal on GitHub'}
           >
             <GitHubGlyph />
+            {latest ? `v${latest.version}` : 'GitHub'}
           </Button>
         </nav>
       </div>
