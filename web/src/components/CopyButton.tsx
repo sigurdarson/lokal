@@ -8,6 +8,7 @@ export function CopyButton({ text }: { text: string }) {
     <Button
       variant="secondary"
       size="compact"
+      iconOnly
       aria-label={copied ? 'Copied' : 'Copy to clipboard'}
       title={copied ? 'Copied' : 'Copy'}
       onClick={async () => {
