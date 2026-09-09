@@ -79,6 +79,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        {/* Umami: cookieless, anonymous page-view counts for the website. The app itself sends nothing. */}
+        <script defer src="https://analytics.typical.is/script.js" data-website-id="a851ffbd-3890-49e5-a2b9-abf1f9c20a4d" />
       </head>
       <body>
         {children}
