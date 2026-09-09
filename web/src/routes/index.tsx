@@ -18,7 +18,7 @@ function Home() {
         <h1 className={styles.title}>See what is running on localhost.</h1>
         <p className={styles.lede}>
           Lokal lists every port your machine is listening on, the process behind it, and the project it belongs to.
-          Open it, copy the URL, jump to the code, or kill it. All from the menu bar.
+          Open it, copy the URL, jump to the code, or kill it.
         </p>
         <div className={styles.actions}>
           <Button render={<a href="/download" />}>Download for macOS</Button>
