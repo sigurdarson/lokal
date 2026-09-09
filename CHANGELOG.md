@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-09
+
 ### Added
 
 - Project scaffold, plan, and contribution guidelines.
@@ -15,4 +17,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Ports are classified as primary or hidden. Debug inspectors, ephemeral-range sockets, GUI applications and system daemons fold behind a per-group "hidden ports" row, with a setting to always show them.
 - Release pipeline: a tag push archives, signs with Developer ID, notarizes and staples a `.dmg` and `.zip`, publishes a GitHub Release, regenerates the signed Sparkle appcast, opens a PR that updates the download redirect and cask, and mirrors the cask to `sigurdarson/homebrew-tap`.
 
-[Unreleased]: https://github.com/sigurdarson/lokal/compare/main...HEAD
+[Unreleased]: https://github.com/sigurdarson/lokal/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/sigurdarson/lokal/releases/tag/v0.1.0
