@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '~/components/Button'
 import { CopyButton } from '~/components/CopyButton'
+import { MenuBarClock } from '~/components/MenuBarClock'
 import styles from '~/components/Home.module.css'
 
 export const Route = createFileRoute('/')({
@@ -120,7 +121,7 @@ function Showcase() {
             <span>
               <BatteryGlyph />
             </span>
-            <span className={styles.clock}>Tue 9 Sep 14:32</span>
+            <MenuBarClock className={styles.clock} />
           </div>
         </div>
         <div className={styles.desktop}>
