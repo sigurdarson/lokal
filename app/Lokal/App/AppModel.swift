@@ -133,7 +133,7 @@ final class AppModel {
 
     func beginConfirmation(_ id: String) {
         for other in Array(confirmations.keys) where other != id { cancelConfirmation(other) }
-        killStates[id] = .confirming
+        setKillState(id, .confirming)
         confirmations[id] = KillConfirmation(
             deadline: Date().addingTimeInterval(KillConfirmation.duration), remaining: KillConfirmation.duration)
         scheduleRevert(id, after: KillConfirmation.duration)
@@ -166,7 +166,7 @@ final class AppModel {
     private func kill(_ entry: PortEntry) async {
         confirmationTimers[entry.id]?.cancel()
         confirmations[entry.id] = nil
-        killStates[entry.id] = .killing
+        setKillState(entry.id, .killing)
 
         do {
             try terminator.terminate(entry.pid)
@@ -199,7 +199,7 @@ final class AppModel {
     }
 
     private func fail(_ id: String, _ message: String) {
-        killStates[id] = .failed(message)
+        setKillState(id, .failed(message))
         failureTimers[id]?.cancel()
         failureTimers[id] = Task { [weak self] in
             try? await Task.sleep(for: .seconds(3))
@@ -223,7 +223,15 @@ final class AppModel {
         failureTimers[id]?.cancel()
         failureTimers[id] = nil
         confirmations[id] = nil
-        killStates[id] = nil
+        setKillState(id, nil)
+    }
+
+    /// Mutations of kill state are wrapped in an animation so views morph rather than snap.
+    private func setKillState(_ id: String, _ state: KillState?) {
+        let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+        withAnimation(reduceMotion ? .easeOut(duration: 0.12) : .spring(duration: 0.26, bounce: 0.35)) {
+            killStates[id] = state
+        }
     }
 
     private func message(for error: any Error) -> String {
