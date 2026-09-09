@@ -2,8 +2,8 @@
 # mirrors this file verbatim to https://github.com/sigurdarson/homebrew-tap/blob/main/Casks/lokal.rb.
 # Do not edit the copy in the tap.
 cask "lokal" do
-  version "0.0.0"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  version "0.1.0"
+  sha256 "bdc9c7a3e8226629a678bcbbbf3f3b5d139e5b21b1cfe33233255d67260b5ac1"
 
   url "https://github.com/sigurdarson/lokal/releases/download/v#{version}/Lokal-#{version}.dmg"
   name "Lokal"

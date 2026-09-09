@@ -1,2 +1,2 @@
-# Rewritten by the release workflow to point at the latest .dmg. Until the first release, send people to the releases page.
-/download https://github.com/sigurdarson/lokal/releases/latest 302
+# Rewritten by the release workflow. Do not edit by hand.
+/download https://github.com/sigurdarson/lokal/releases/download/v0.1.0/Lokal-0.1.0.dmg 302
