@@ -54,6 +54,8 @@ struct GroupSectionView: View {
             .padding(.horizontal, 16)
             .padding(.top, 10)
             .padding(.bottom, 10)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .hoverWash()
@@ -85,6 +87,8 @@ struct GroupSectionView: View {
             .foregroundStyle(Theme.textAA)
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .hoverWash()
