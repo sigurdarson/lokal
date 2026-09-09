@@ -158,7 +158,6 @@ const mockEntries: MockEntry[] = [
 ]
 
 const groups = ['lokal', 'storefront', 'Containers', 'Services']
-const hiddenTotal = 27
 
 /** A working miniature of the panel. Kill asks for confirmation, removes the row, and everything comes back later. */
 function MockPanel() {
@@ -184,7 +183,7 @@ function MockPanel() {
       <div className={styles.panelHeader}>
         <span className={styles.panelTitle}>Lokal</span>
         <span className={styles.panelCount}>
-          {visible.length} {visible.length === 1 ? 'port' : 'ports'} · {hiddenTotal} hidden
+          {visible.length} {visible.length === 1 ? 'port' : 'ports'}
         </span>
         <span className={styles.panelRefresh} aria-hidden="true">
           <RefreshGlyph />
