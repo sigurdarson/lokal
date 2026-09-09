@@ -15,9 +15,7 @@
 
 .body h2 {
   font-size: var(--font-size-xl);
-  margin-top: var(--space-10);
-  padding-top: var(--space-6);
-  border-top: var(--border-width) solid var(--border-decorative);
+  margin-top: var(--space-12);
 }
 
 .body h3 {

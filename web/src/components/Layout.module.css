@@ -5,7 +5,6 @@
   backdrop-filter: saturate(180%) blur(1rem);
   -webkit-backdrop-filter: saturate(180%) blur(1rem);
   background: color-mix(in oklch, var(--surface-page) 80%, transparent);
-  border-bottom: var(--border-width) solid var(--border-decorative);
 }
 
 .headerInner {
@@ -60,7 +59,6 @@
   max-width: var(--max-width);
   margin: var(--space-20) auto 0;
   padding: var(--space-6) var(--space-6) var(--space-12);
-  border-top: var(--border-width) solid var(--border-decorative);
   color: var(--text-aa);
   font-size: var(--font-size-sm);
   display: flex;

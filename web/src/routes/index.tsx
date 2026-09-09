@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Button } from '~/components/Button'
 import { CopyButton } from '~/components/CopyButton'
 import styles from '~/components/Home.module.css'
 
@@ -20,9 +21,7 @@ function Home() {
             Open it, copy the URL, jump to the code, or kill it. All from the menu bar.
           </p>
           <div className={styles.actions}>
-            <a className={styles.primary} href="/download">
-              Download for macOS
-            </a>
+            <Button render={<a href="/download" />}>Download for macOS</Button>
             <div className={styles.brew}>
               <span>$</span>
               <code>{brew}</code>

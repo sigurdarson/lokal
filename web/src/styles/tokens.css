@@ -83,6 +83,11 @@
   --max-width: 65rem;
   --panel-width: 22.5rem;
 
+  /* Components */
+  --button-height: 2.25rem;
+  --button-padding-x: 0.75rem;
+  --button-radius: 0.5rem;
+
   /* Motion */
   --duration-fast: 120ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);

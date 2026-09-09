@@ -1,0 +1,41 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--button-height);
+  padding: 0 var(--button-padding-x);
+  border: 0;
+  border-radius: var(--button-radius);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.button[data-disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.primary {
+  background: var(--surface-inverse);
+  color: var(--text-on-inverse-aaa);
+}
+
+.secondary {
+  background: var(--surface-sunken);
+  color: var(--text-aaa);
+}
+
+.button:not([data-disabled]):hover {
+  opacity: 0.88;
+}
+
+.button:not([data-disabled]):active {
+  opacity: 0.76;
+}

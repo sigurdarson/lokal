@@ -40,22 +40,6 @@
   align-items: center;
 }
 
-.primary {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  background: var(--surface-inverse);
-  color: var(--text-on-inverse-aaa);
-  font-weight: 600;
-  padding: 0.6875rem var(--space-5);
-  border-radius: var(--radius-md);
-  text-decoration: none;
-}
-
-.primary:hover {
-  opacity: 0.92;
-}
-
 .requirements {
   font-size: var(--font-size-xs);
   color: var(--text-aa);
@@ -66,10 +50,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  background: var(--surface-sunken);
-  border: var(--border-width) solid var(--border-decorative);
-  border-radius: var(--radius-md);
-  padding: 0.5625rem var(--space-3) 0.5625rem 0.875rem;
+  height: var(--button-height);
+  background: var(--surface-raised);
+  border-radius: var(--button-radius);
+  padding: 0 var(--space-1) 0 0.875rem;
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
 }
@@ -77,21 +61,6 @@
 .brew span {
   color: var(--text-aa);
   user-select: none;
-}
-
-.copy {
-  border: 0;
-  background: transparent;
-  color: var(--text-aa);
-  cursor: pointer;
-  padding: var(--space-1) 0.375rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-}
-
-.copy:hover {
-  background: var(--border-decorative);
-  color: var(--text-aaa);
 }
 
 /* Mock panel */
@@ -256,7 +225,6 @@
 }
 
 .feature {
-  border: var(--border-width) solid var(--border-decorative);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   background: var(--surface-raised);
@@ -297,7 +265,7 @@
   width: 1.625rem;
   height: 1.625rem;
   border-radius: var(--radius-full);
-  border: var(--border-width) solid var(--nontext-aa);
+  background: var(--surface-sunken);
   display: grid;
   place-items: center;
   font-size: var(--font-size-xs);

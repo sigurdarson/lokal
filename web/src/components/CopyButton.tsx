@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import styles from './Home.module.css'
+import { Button } from './Button'
 
 export function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
   return (
-    <button
-      type="button"
-      className={styles.copy}
+    <Button
+      variant="secondary"
       aria-label="Copy to clipboard"
       onClick={async () => {
         try {
@@ -19,6 +18,6 @@ export function CopyButton({ text }: { text: string }) {
       }}
     >
       {copied ? 'Copied' : 'Copy'}
-    </button>
+    </Button>
   )
 }
