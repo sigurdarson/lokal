@@ -15,7 +15,6 @@ function Home() {
   return (
     <>
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>Free and open source · macOS menu bar</p>
         <h1 className={styles.title}>See what is running on localhost.</h1>
         <p className={styles.lede}>
           Lokal lists every port your machine is listening on, the process behind it, and the project it belongs to.

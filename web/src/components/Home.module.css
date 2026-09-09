@@ -9,13 +9,6 @@
   }
 }
 
-.eyebrow {
-  color: var(--text-aa);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  margin: 0 0 var(--space-3);
-}
-
 .title {
   font-size: var(--font-size-display);
   font-weight: 700;
