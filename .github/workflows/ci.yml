@@ -58,7 +58,28 @@ jobs:
           xcodebuild -version
           swift --version
       - name: Lint
-        run: swift format lint --strict --recursive --configuration .swift-format app/LokalCore/Sources app/LokalCore/Tests app/LokalCore/Package.swift
+        run: swift format lint --strict --recursive --configuration .swift-format app/LokalCore/Sources app/LokalCore/Tests app/LokalCore/Package.swift app/Lokal
       - name: Test
         working-directory: app/LokalCore
         run: swift test --parallel
+
+  app:
+    name: Lokal.app (build)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build
+        working-directory: app
+        run: |
+          set -o pipefail
+          xcodebuild -project Lokal.xcodeproj -scheme Lokal -configuration Release \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" \
+            build 2>&1 | tee build.log | grep -E "error:|warning:|BUILD "
+      - name: Verify bundle
+        run: |
+          APP=app/build/DerivedData/Build/Products/Release/Lokal.app
+          test -f "$APP/Contents/MacOS/Lokal"
+          test -d "$APP/Contents/Frameworks/Sparkle.framework"
+          /usr/libexec/PlistBuddy -c "Print :SUFeedURL" "$APP/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c "Print :LSUIElement" "$APP/Contents/Info.plist"
