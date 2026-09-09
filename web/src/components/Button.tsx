@@ -8,6 +8,8 @@ type Size = 'default' | 'compact'
 type ButtonProps = ComponentProps<typeof BaseButton> & {
   variant?: Variant
   size?: Size
+  /** Square button holding only an icon. Pass an aria-label. */
+  iconOnly?: boolean
 }
 
 /**
@@ -15,8 +17,8 @@ type ButtonProps = ComponentProps<typeof BaseButton> & {
  * Primary is the inverse surface; secondary is the sunken surface.
  * Pass `render={<a href="…" />}` (or a router `<Link />`) to get a link with button styling.
  */
-export function Button({ variant = 'primary', size = 'default', className, render, ...props }: ButtonProps) {
-  const classes = [styles.button, styles[variant], size === 'compact' && styles.compact, className]
+export function Button({ variant = 'primary', size = 'default', iconOnly = false, className, render, ...props }: ButtonProps) {
+  const classes = [styles.button, styles[variant], size === 'compact' && styles.compact, iconOnly && styles.iconOnly, className]
     .filter(Boolean)
     .join(' ')
   return <BaseButton className={classes} render={render} nativeButton={render === undefined} {...props} />
