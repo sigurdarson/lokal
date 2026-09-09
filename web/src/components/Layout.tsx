@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { Button } from './Button'
 import styles from './Layout.module.css'
 
 export function Header() {
@@ -11,8 +12,12 @@ export function Header() {
           Lokal
         </Link>
         <nav className={styles.nav} aria-label="Primary">
-          <Link to="/changelog">Changelog</Link>
-          <a href="https://github.com/sigurdarson/lokal">GitHub</a>
+          <Button variant="secondary" size="compact" render={<Link to="/changelog" />}>
+            Changelog
+          </Button>
+          <Button variant="secondary" size="compact" render={<a href="https://github.com/sigurdarson/lokal" />}>
+            GitHub
+          </Button>
         </nav>
       </div>
     </header>
@@ -30,7 +35,7 @@ export function Footer() {
       <a href="https://github.com/sigurdarson/lokal">Source</a>
       <a href="https://github.com/sigurdarson/lokal/issues">Issues</a>
       <a href="https://github.com/sigurdarson/lokal/security/policy">Security</a>
-      <span>Made by G. Sigurdarson</span>
+      <a href="https://sigurdarson.is">Made by G. Sigurdarson</a>
     </footer>
   )
 }

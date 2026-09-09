@@ -1,14 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0f172a"/>
-  <circle cx="32" cy="32" r="6" fill="#38bdf8"/>
-  <circle cx="14" cy="20" r="4" fill="#94a3b8"/>
-  <circle cx="50" cy="20" r="4" fill="#94a3b8"/>
-  <circle cx="14" cy="46" r="4" fill="#94a3b8"/>
-  <circle cx="50" cy="46" r="4" fill="#94a3b8"/>
-  <g stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round">
-    <line x1="18" y1="22" x2="27" y2="28"/>
-    <line x1="46" y1="22" x2="37" y2="28"/>
-    <line x1="18" y1="44" x2="27" y2="36"/>
-    <line x1="46" y1="44" x2="37" y2="36"/>
+  <rect width="64" height="64" rx="14" fill="oklch(0.205 0 0)"/>
+  <g transform="translate(12 12) scale(1.6667)" fill="none" stroke="oklch(0.985 0 0)" stroke-width="1.6" stroke-linecap="round">
+    <path d="M12 10.5C11.1716 10.5 10.5 11.1716 10.5 12C10.5 12.8284 11.1716 13.5 12 13.5C12.8284 13.5 13.5 12.8284 13.5 12C13.5 11.1716 12.8284 10.5 12 10.5ZM12 10.5V2"/>
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M15 8C19.0571 8.52165 22 10.0733 22 11.9063C22 14.1672 17.5228 16 12 16C6.47715 16 2 14.1672 2 11.9063C2 10.0733 4.94289 8.52165 9 8"/>
   </g>
 </svg>

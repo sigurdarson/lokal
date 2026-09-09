@@ -2,7 +2,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-r
 import { Footer, Header, Main } from '~/components/Layout'
 import globalCss from '~/styles/global.css?url'
 
-const title = 'Lokal — see what is running on localhost'
+const title = 'Lokal: see what is running on localhost'
 const description =
   'A free, open source macOS menu bar app that lists your localhost ports, the process behind each one, and the project it belongs to.'
 
@@ -17,8 +17,9 @@ export const Route = createRootRoute({
       { property: 'og:description', content: description },
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: 'https://lokal.sigurdarson.is/' },
-      { name: 'theme-color', content: '#fbfbfa', media: '(prefers-color-scheme: light)' },
-      { name: 'theme-color', content: '#0e0f12', media: '(prefers-color-scheme: dark)' },
+      // --gray-50 and --gray-950 from src/styles/tokens.css
+      { name: 'theme-color', content: 'oklch(0.985 0 0)', media: '(prefers-color-scheme: light)' },
+      { name: 'theme-color', content: 'oklch(0.145 0 0)', media: '(prefers-color-scheme: dark)' },
     ],
     links: [
       { rel: 'stylesheet', href: globalCss },

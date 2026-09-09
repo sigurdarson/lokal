@@ -1,0 +1,123 @@
+/*
+ * Lokal website design tokens. See web/DESIGN.md for the rules.
+ *
+ * Primitives: the only colours on the site. Achromatic OKLCH, so relative luminance is L³ and
+ * every contrast ratio below is exact. scripts/check-styles.mjs re-derives and enforces them.
+ *
+ * Semantic tokens carry the WCAG tier they guarantee on every surface of their theme:
+ *   text-*-aaa  ≥ 7:1     text-*-aa  ≥ 4.5:1     nontext-*-aa  ≥ 3:1 (WCAG 1.4.11)     *-decorative  no requirement
+ */
+:root {
+  color-scheme: light dark;
+
+  --gray-50: oklch(0.985 0 0);
+  --gray-100: oklch(0.97 0 0);
+  --gray-200: oklch(0.922 0 0);
+  --gray-300: oklch(0.87 0 0);
+  --gray-400: oklch(0.708 0 0);
+  --gray-500: oklch(0.556 0 0);
+  --gray-600: oklch(0.439 0 0);
+  --gray-700: oklch(0.371 0 0);
+  --gray-800: oklch(0.269 0 0);
+  --gray-900: oklch(0.205 0 0);
+  --gray-950: oklch(0.145 0 0);
+
+  /* Surfaces */
+  --surface-page: var(--gray-50);
+  --surface-raised: var(--gray-100);
+  --surface-sunken: var(--gray-200);
+  --surface-inverse: var(--gray-900);
+
+  /* Text. Worst-case ratio on this theme's surfaces: 14.2, 8.3, 6.2 */
+  --text-aaa: var(--gray-900);
+  --text-muted-aaa: var(--gray-700);
+  --text-aa: var(--gray-600);
+  --text-on-inverse-aaa: var(--gray-50);
+
+  /* Non-text UI: icons, focus rings, meaningful borders. Worst case 3.8 */
+  --nontext-aa: var(--gray-500);
+
+  /* Decorative: separators and hairlines that carry no information */
+  --border-decorative: var(--gray-200);
+  /* Hover wash over any surface. Light mirrors the dark value (gray-50 at 16%) with gray-950 at 6%. */
+  --surface-hover-decorative: color-mix(in oklch, var(--gray-950) 6%, transparent);
+
+  --shadow-raised: 0 1.25rem 3rem oklch(0.145 0 0 / 0.14), 0 0.0625rem 0.125rem oklch(0.145 0 0 / 0.08);
+
+  /* Type: system stack, rem scale */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.625rem;
+  --font-size-3xl: 2.125rem;
+  --font-size-display: clamp(2.375rem, 5vw, 3.375rem);
+  --leading-tight: 1.15;
+  --leading-normal: 1.55;
+  --tracking-tight: -0.015em;
+  --tracking-display: -0.03em;
+
+  /* Space, rem (0.25rem steps) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Shape */
+  --border-width: 0.0625rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-full: 999rem;
+
+  /* Layout */
+  --measure: 44em;
+  --max-width: 65rem;
+  --panel-width: 22.5rem;
+
+  /* Components */
+  --button-height: 2.25rem;
+  --button-height-compact: 1.75rem;
+  --button-padding-x: 0.75rem;
+  --button-padding-x-compact: 0.625rem;
+  --button-radius: 0.5rem;
+
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-pop: 260ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-page: var(--gray-950);
+    --surface-raised: var(--gray-900);
+    --surface-sunken: var(--gray-800);
+    --surface-inverse: var(--gray-50);
+
+    /* Worst case: 14.5, 10.2, 5.8 */
+    --text-aaa: var(--gray-50);
+    --text-muted-aaa: var(--gray-300);
+    --text-aa: var(--gray-400);
+    --text-on-inverse-aaa: var(--gray-900);
+
+    /* Worst case 3.2 */
+    --nontext-aa: var(--gray-500);
+
+    --border-decorative: var(--gray-800);
+    --surface-hover-decorative: color-mix(in oklch, var(--gray-50) 16%, transparent);
+
+    --shadow-raised: 0 1.5rem 3.75rem oklch(0.145 0 0 / 0.55), 0 0.0625rem 0.125rem oklch(0.145 0 0 / 0.4);
+  }
+}
