@@ -33,7 +33,7 @@ final class Preferences {
         didSet { defaults.set(terminalBundleID, forKey: Key.terminalBundleID) }
     }
 
-    /// Always list auxiliary ports (inspectors, ephemeral internal sockets) instead of folding them per group.
+    /// Always list auxiliary ports (inspectors, ephemeral sockets, apps, system daemons) instead of folding them per group.
     var showsAuxiliaryPorts: Bool {
         didSet { defaults.set(showsAuxiliaryPorts, forKey: Key.showsAuxiliaryPorts) }
     }

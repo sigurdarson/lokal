@@ -6,12 +6,12 @@ import Testing
 @Suite("Snapshot grouping")
 struct SnapshotTests {
     private func entry(
-        pid: pid_t, port: UInt16, name: String = "node", project: Project? = nil,
+        pid: pid_t, port: UInt16, name: String = "node", path: String? = nil, project: Project? = nil,
         service: ServiceMatch? = nil, container: ContainerInfo? = nil
     ) -> PortEntry {
         PortEntry(
             socket: ListeningSocket(pid: pid, port: port, family: .ipv4, address: .loopback),
-            process: ProcessDetails(pid: pid, name: name),
+            process: ProcessDetails(pid: pid, name: name, executablePath: path),
             service: service, project: project, container: container
         )
     }
@@ -61,7 +61,32 @@ struct SnapshotTests {
         #expect(entry(pid: 4, port: 49151).role == .primary)
         #expect(entry(pid: 4, port: 49152).role == .auxiliary)
 
+        // GUI apps and system daemons fold unless they belong to a project or a known service.
+        let spotify = "/Applications/Spotify.app/Contents/MacOS/Spotify"
+        #expect(entry(pid: 5, port: 4381, name: "Spotify", path: spotify).role == .auxiliary)
+        #expect(
+            entry(pid: 6, port: 7265, name: "Raycast", path: "/Applications/Raycast.app/Contents/MacOS/Raycast").role
+                == .auxiliary)
+        #expect(
+            entry(
+                pid: 7, port: 5000, name: "ControlCenter",
+                path: "/System/Library/CoreServices/ControlCenter.app/Contents/MacOS/ControlCenter"
+            ).role == .auxiliary)
+        #expect(entry(pid: 8, port: 631, name: "cupsd", path: "/usr/sbin/cupsd").role == .auxiliary)
         let project = Project(name: "site", path: "/r/site", manifest: .packageJSON)
+        #expect(
+            entry(
+                pid: 9, port: 3000, name: "Code Helper",
+                path: "/Applications/Visual Studio Code.app/Contents/MacOS/Code Helper", project: project
+            ).role == .primary)
+        let postgres = ServiceMatch(service: ServiceCatalog.bundled.service(id: "postgres")!, confidence: .high)
+        #expect(
+            entry(
+                pid: 10, port: 5432, name: "postgres",
+                path: "/Applications/Postgres.app/Contents/Versions/16/bin/postgres", service: postgres
+            ).role == .primary)
+        #expect(entry(pid: 11, port: 8080, name: "myserver", path: "/Users/x/go/bin/myserver").role == .primary)
+
         let snapshot = Snapshot(entries: [
             entry(pid: 1, port: 3001, project: project, service: vite),
             entry(pid: 1, port: 9230, project: project, service: inspector),

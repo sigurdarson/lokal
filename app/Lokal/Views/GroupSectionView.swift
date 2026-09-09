@@ -43,7 +43,7 @@ struct GroupSectionView: View {
     private var disclosure: some View {
         let count = group.auxiliaryEntries.count
         let expanded = model.isExpanded(group.id)
-        let noun = count == 1 ? "internal port" : "internal ports"
+        let noun = count == 1 ? "hidden port" : "hidden ports"
         return Button {
             model.toggleExpanded(group.id)
         } label: {
@@ -51,7 +51,7 @@ struct GroupSectionView: View {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 9, weight: .semibold))
                     .rotationEffect(.degrees(expanded ? 90 : 0))
-                Text(verbatim: expanded ? "Hide \(count) \(noun)" : "\(count) more \(noun)")
+                Text(verbatim: expanded ? "Hide \(count) \(noun)" : "\(count) \(noun)")
                 Spacer()
             }
             .font(.caption)
@@ -62,8 +62,8 @@ struct GroupSectionView: View {
         .padding(.leading, 48)
         .padding(.trailing, 16)
         .padding(.vertical, 5)
-        .help("Debug inspectors and ephemeral sockets that belong to the processes above")
-        .accessibilityLabel(expanded ? "Hide \(count) internal ports" : "Show \(count) more internal ports")
+        .help("Debug inspectors, ephemeral sockets, apps and system services. Not part of a project.")
+        .accessibilityLabel(expanded ? "Hide \(count) hidden ports" : "Show \(count) hidden ports")
     }
 
     private var icon: String {

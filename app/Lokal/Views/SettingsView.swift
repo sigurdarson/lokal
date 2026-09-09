@@ -39,9 +39,9 @@ struct SettingsView: View {
             }
 
             Section("Ports") {
-                Toggle("Always show internal ports", isOn: $preferences.showsAuxiliaryPorts)
+                Toggle("Always show hidden ports", isOn: $preferences.showsAuxiliaryPorts)
                 Text(
-                    "Debug inspectors and sockets in the ephemeral range (49152 and up) are folded behind a \"more\" row per project. Turn this on to list everything."
+                    "Lokal focuses on development work. Debug inspectors, ephemeral sockets (49152 and up), GUI apps such as Spotify or Raycast, and system services are folded behind a \"hidden ports\" row in each group. Turn this on to list everything."
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)

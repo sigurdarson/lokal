@@ -52,7 +52,7 @@ struct PanelView: View {
             case 1: "1 port"
             case let count: "\(count) ports"
             }
-        return model.hiddenCount > 0 ? "\(base) · \(model.hiddenCount) internal" : base
+        return model.hiddenCount > 0 ? "\(base) · \(model.hiddenCount) hidden" : base
     }
 
     @ViewBuilder
