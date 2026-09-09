@@ -23,10 +23,14 @@
   font-size: var(--font-size-xs);
 }
 
-/* Icon-only buttons are square. */
-.compact:has(> svg:only-child) {
-  width: var(--button-height-compact);
+/* Icon-only buttons are square. Set explicitly: CSS cannot tell an icon beside a text node from one alone. */
+.iconOnly {
   padding: 0;
+  width: var(--button-height);
+}
+
+.iconOnly.compact {
+  width: var(--button-height-compact);
 }
 
 .button[data-disabled] {
