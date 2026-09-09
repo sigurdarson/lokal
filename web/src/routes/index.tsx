@@ -169,34 +169,49 @@ function MockPanel() {
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
-        Lokal <span>5 ports · 12 hidden</span>
+        <span className={styles.panelTitle}>Lokal</span>
+        <span className={styles.panelCount}>5 ports · 12 hidden</span>
+        <span className={styles.panelRefresh} aria-hidden="true">
+          <RefreshGlyph />
+        </span>
       </div>
-      <div className={styles.group}>▸ shop</div>
-      <Row icon="⚡" label="Vite" chip="web" detail="node · PID 48211" port="5173" />
-      <Row icon="◆" label="Rails" chip="api" detail="puma · PID 48090" port="3000" confirm />
+      <div className={styles.group}>shop</div>
+      <Row label="Vite" chip="web" detail="node · 48211" port="5173" />
+      <Row label="Rails" chip="api" detail="puma · 48090" port="3000" confirm />
       <div className={styles.more}>2 hidden ports</div>
-      <div className={styles.group}>▸ Containers</div>
-      <Row icon="▣" label="shop-db" detail="com.docker.backend · postgres:16" port="5433" />
-      <div className={styles.group}>▸ Services</div>
-      <Row icon="◍" label="Postgres" detail="postgres · PID 812" port="5432" />
-      <Row icon="◍" label="Redis" detail="redis-server · PID 815" port="6379" />
+      <div className={styles.group}>Containers</div>
+      <Row label="shop-db" detail="postgres:16" port="5433" />
+      <div className={styles.group}>Services</div>
+      <Row label="Postgres" detail="postgres · 812" port="5432" />
+      <Row label="Redis" detail="redis-server · 815" port="6379" />
       <div className={styles.panelFooter}>
-        <span>Settings</span>
-        <span>Quit</span>
+        <Button variant="secondary" size="compact" render={<span />}>
+          Settings
+        </Button>
+        <Button variant="secondary" size="compact" render={<span />}>
+          Quit
+        </Button>
       </div>
     </div>
   )
 }
 
+function RefreshGlyph() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9" />
+      <path d="M13.5 2.5v3h-3" />
+    </svg>
+  )
+}
+
 function Row({
-  icon,
   label,
   chip,
   detail,
   port,
   confirm,
 }: {
-  icon: string
   label: string
   chip?: string
   detail: string
@@ -205,7 +220,6 @@ function Row({
 }) {
   return (
     <div className={styles.row}>
-      <div className={styles.rowIcon}>{icon}</div>
       <div className={styles.rowText}>
         <div className={styles.rowLabel}>
           {label}
@@ -213,14 +227,14 @@ function Row({
         </div>
         <div className={styles.rowDetail}>{detail}</div>
       </div>
-      <div className={styles.port}>:{port}</div>
+      <div className={styles.port}>{port}</div>
       {confirm ? (
         <div className={styles.killConfirm}>
           <b>Kill</b>
           <i>×</i>
         </div>
       ) : (
-        <div className={styles.kill}>⊗</div>
+        <div className={styles.kill} />
       )}
     </div>
   )
