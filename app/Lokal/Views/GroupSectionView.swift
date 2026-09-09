@@ -53,7 +53,7 @@ struct GroupSectionView: View {
             .foregroundStyle(Theme.textAA)
             .padding(.horizontal, 16)
             .padding(.top, 10)
-            .padding(.bottom, collapsed ? 10 : 4)
+            .padding(.bottom, 10)
         }
         .buttonStyle(.plain)
         .hoverWash()
