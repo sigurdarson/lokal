@@ -1,11 +1,12 @@
+/* Equal breathing room above and below the hero text. */
 .hero {
   max-width: 40rem;
-  padding: var(--space-16) 0 var(--space-10);
+  padding: var(--space-16) 0;
 }
 
 @media (max-width: 54rem) {
   .hero {
-    padding-top: var(--space-12);
+    padding: var(--space-12) 0;
   }
 }
 
