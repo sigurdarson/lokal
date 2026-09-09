@@ -354,10 +354,8 @@
 
 .eyebrowLabel {
   margin: 0 0 var(--space-4);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-aa);
 }
 

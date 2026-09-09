@@ -2,6 +2,7 @@
 // Enforces web/DESIGN.md:
 //  1. Every semantic colour token meets the WCAG tier in its name on every surface of its theme.
 //  2. Only tokens.css defines colours; CSS and TSX use tokens, CSS never uses px.
+//  3. Copy rules: no em dashes, no uppercase or capitalize transforms (sentence case everywhere).
 //     TSX may carry oklch() only where CSS cannot reach (theme-color meta), never other colour syntaxes.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -98,6 +99,8 @@ for (const file of walk(join(root, 'src'))) {
     const where = `${rel}:${index + 1}`
     const code = line.replace(/\/\*.*?\*\//g, '').replace(/\/\/.*$/, '')
     if (colourLiteral.test(code)) failures.push(`${where}: colour literal, use a token (${code.trim()})`)
+    if (/—/.test(line)) failures.push(`${where}: em dash; rewrite the sentence`)
+    if (/text-transform\s*:\s*(uppercase|capitalize)/.test(code)) failures.push(`${where}: no all caps or title case transforms`)
     if (!isCss) return
     if (/\b\d*\.?\d+px\b/.test(code)) failures.push(`${where}: px value, use rem (${code.trim()})`)
     if (file !== tokensPath && /oklch\(/.test(code)) failures.push(`${where}: oklch() outside tokens.css (${code.trim()})`)

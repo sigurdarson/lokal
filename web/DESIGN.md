@@ -50,6 +50,9 @@ Current assignments and their worst-case ratios:
 ## Text
 
 - `text-wrap: pretty` is set on `body` and inherits everywhere; headings use `text-wrap: balance`. Do not override either in components.
+- **Sentence case everywhere**: headings, buttons, labels, page titles. Proper nouns keep their casing (macOS, GitHub, Postgres).
+- **No all caps.** `text-transform: uppercase` and `capitalize` are rejected by the checker. Eyebrow labels are small, semibold and sentence case.
+- **No em dashes.** Split the sentence, or use a colon or comma. The checker rejects the character in `web/src`.
 
 ## Themes
 

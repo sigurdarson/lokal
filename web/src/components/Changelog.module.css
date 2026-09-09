@@ -20,8 +20,7 @@
 
 .body h3 {
   font-size: var(--font-size-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-weight: 600;
   color: var(--text-aa);
   margin-top: var(--space-5);
 }

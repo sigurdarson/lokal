@@ -4,7 +4,7 @@ import { renderChangelog } from '~/lib/changelog'
 
 export const Route = createFileRoute('/changelog')({
   head: () => ({
-    meta: [{ title: 'Changelog — Lokal' }],
+    meta: [{ title: 'Lokal changelog' }],
   }),
   component: Changelog,
 })
