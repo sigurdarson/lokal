@@ -9,6 +9,7 @@ export function CopyButton({ text }: { text: string }) {
       variant="secondary"
       size="compact"
       iconOnly
+      data-umami-event="copy-brew"
       aria-label={copied ? 'Copied' : 'Copy to clipboard'}
       title={copied ? 'Copied' : 'Copy'}
       onClick={async () => {
