@@ -9,8 +9,7 @@ app/build/
 app/DerivedData/
 app/**/xcuserdata/
 app/**/*.xcuserstate
-app/**/*.xcworkspace/xcshareddata/swiftpm/
-!app/Lokal.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+app/**/xcshareddata/swiftpm/configuration/
 *.hmap
 *.ipa
 *.dSYM.zip

@@ -68,7 +68,7 @@ lokal/
 │   │   │   ├── Services/        ServiceCatalog, ServiceMatcher, services.json
 │   │   │   ├── Docker/          DockerInspector (unix-socket Engine API)
 │   │   │   ├── Model/           PortEntry, ProjectGroup, Snapshot
-│   │   │   └── Scanner.swift    orchestrates the above into a Snapshot
+│   │   │   └── PortScanner.swift orchestrates the above into a Snapshot
 │   │   └── Tests/LokalCoreTests/
 │   ├── ExportOptions.plist      developer-id export
 │   └── scripts/                 build-archive.sh, make-dmg.sh, notarize.sh, bump-version.sh
@@ -115,7 +115,7 @@ Why the split: everything testable (socket parsing, project detection, service m
 ### 3.1 Data flow
 
 ```
- panel appears ──► AppModel.startPolling() ──► every 2 s ──► Scanner.snapshot()
+ panel appears ──► AppModel.startPolling() ──► every 2 s ──► PortScanner.snapshot()
                                                                │
      ┌─────────────────────────────────────────────────────────┘
      ▼
@@ -134,7 +134,7 @@ Why the split: everything testable (socket parsing, project detection, service m
  AppModel.snapshot (MainActor, @Observable) ──► PanelView diffing with stable ids (pid:port)
 ```
 
-- `Scanner` is an `actor`. `AppModel` is `@MainActor @Observable`. `PortEntry`/`Snapshot` are `Sendable` value types. Swift 6 strict concurrency, no `@unchecked Sendable` outside the C-interop layer.
+- `PortScanner` is an `actor`. `AppModel` is `@MainActor @Observable`. `PortEntry`/`Snapshot` are `Sendable` value types. Swift 6 strict concurrency, no `@unchecked Sendable` outside the C-interop layer.
 - Polling: refresh immediately on panel `onAppear`, then a `Task` loop with 2 s sleep while visible; cancelled on `onDisappear`. No background polling when closed unless the badge is enabled (then 30 s).
 - Caches keyed by `(pid, proc_bsdinfo.pbi_start_tvsec)` so pid reuse cannot serve stale data.
 

@@ -2,7 +2,7 @@ import Foundation
 
 /// Produces `Snapshot`s: enumerates listening sockets, describes their processes,
 /// matches services, resolves projects and (when relevant) container names.
-public actor Scanner {
+public actor PortScanner {
     private let socketSource: any ListeningSocketSource
     private let processInspector: any ProcessInspecting
     private let projectResolver: ProjectResolver
