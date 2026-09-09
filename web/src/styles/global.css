@@ -19,6 +19,14 @@ body {
   line-height: var(--leading-normal);
   color: var(--text-aaa);
   background: var(--surface-page);
+  text-wrap: pretty;
+}
+
+/* Headings get the balanced variant so short titles do not leave an orphan word. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 a {

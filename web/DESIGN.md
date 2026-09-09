@@ -47,6 +47,10 @@ Current assignments and their worst-case ratios:
 - `em` is acceptable for values that should scale with the local font size, such as letter-spacing, underline offset, and `max-width` on prose (`--measure`).
 - Prefer the scale tokens (`--space-*`, `--font-size-*`, `--radius-*`) over ad-hoc rem values. Ad-hoc values are allowed when a token would be a lie, for example optical alignment inside the mock panel.
 
+## Text
+
+- `text-wrap: pretty` is set on `body` and inherits everywhere; headings use `text-wrap: balance`. Do not override either in components.
+
 ## Themes
 
 - Light and dark are expressed entirely in `tokens.css` under `prefers-color-scheme`. Component CSS never branches on colour scheme.
