@@ -8,12 +8,21 @@ struct MenuBarLabel: View {
     var body: some View {
         if showsBadge, count > 0 {
             HStack(spacing: 3) {
-                Image(systemName: "network.slash")
+                icon
                 Text(verbatim: String(count))
                     .monospacedDigit()
             }
         } else {
-            Image(systemName: "network.slash")
+            icon
         }
+    }
+
+    /// The Lokal mark as a template image, so the menu bar tints it for light and dark.
+    private var icon: some View {
+        Image("MenuBarIcon")
+            .renderingMode(.template)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 16, height: 16)
     }
 }
