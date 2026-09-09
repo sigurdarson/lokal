@@ -44,6 +44,7 @@ function parseThemes(css) {
 }
 
 function resolve(theme, value) {
+  if (/color-mix\(/.test(value)) throw new Error(`Cannot measure a translucent value: ${value}`)
   const ref = /var\(--([\w-]+)\)/.exec(value)
   return ref ? resolve(theme, theme[ref[1]]) : value
 }
@@ -53,7 +54,10 @@ const primitives = Object.keys(themes.light).filter((k) => k.startsWith('gray-')
 const rows = []
 
 for (const [themeName, theme] of Object.entries(themes)) {
-  const surfaces = Object.keys(theme).filter((k) => k.startsWith('surface-') && k !== 'surface-inverse')
+  // Decorative surfaces are translucent washes over a real surface; they do not set a background of their own.
+  const surfaces = Object.keys(theme).filter(
+    (k) => k.startsWith('surface-') && k !== 'surface-inverse' && !k.endsWith('-decorative'),
+  )
   const foregrounds = Object.keys(theme).filter((k) => k.startsWith('text-') || k.startsWith('nontext-'))
   for (const token of foregrounds) {
     const tier = tierFor(token)
