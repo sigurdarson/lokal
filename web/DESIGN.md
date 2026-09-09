@@ -7,6 +7,7 @@ These rules apply to everything under `web/`. `pnpm check:styles` enforces them 
 - **Only the gray scale exists.** `--gray-50` to `--gray-950`, defined once in `src/styles/tokens.css` as achromatic OKLCH. No other colour may be introduced without changing this document.
 - **OKLCH only.** No hex, `rgb()`, `hsl()`, named colours, or any other colour function anywhere in `web/`.
 - **Components never use primitives or literals.** Component CSS references semantic tokens (`var(--text-aa)`), never `var(--gray-600)` and never `oklch(...)`. `tokens.css` is the only file allowed to contain `oklch(`.
+- **Photographs are content, not colour.** The showcase wallpaper (`public/wallpaper-*.webp`) is the one image on the site. Everything drawn over it still uses the gray tokens.
 - **Alpha is the only permitted derivation.** Overlays and shadows may use `color-mix(in oklch, var(--token) N%, transparent)` or an alpha channel on a primitive inside `tokens.css`. No lightening, darkening, or mixing two colours.
 
 ## Token naming

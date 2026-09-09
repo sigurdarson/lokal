@@ -73,9 +73,10 @@
 .screen {
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(60rem 30rem at 85% -10%, color-mix(in oklch, var(--surface-page) 60%, transparent), transparent 60%),
-    var(--surface-sunken);
+  background-color: var(--surface-sunken);
+  background-image: image-set(url('/wallpaper-1400.webp') 1x, url('/wallpaper-2000.webp') 2x);
+  background-size: cover;
+  background-position: top right;
 }
 
 .desktop {
@@ -96,7 +97,7 @@
   justify-content: space-between;
   height: 2rem;
   padding: 0 var(--space-4) 0 var(--space-5);
-  background: color-mix(in oklch, var(--surface-raised) 85%, transparent);
+  background: color-mix(in oklch, var(--surface-raised) 72%, transparent);
   backdrop-filter: blur(1.25rem);
   -webkit-backdrop-filter: blur(1.25rem);
   font-size: var(--font-size-sm);
