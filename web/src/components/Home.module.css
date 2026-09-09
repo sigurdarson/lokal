@@ -182,12 +182,6 @@
   color: var(--text-aa);
 }
 
-.more {
-  padding: var(--space-1) var(--space-4) 0.375rem;
-  font-size: var(--font-size-xs);
-  color: var(--text-aa);
-}
-
 .row {
   display: grid;
   grid-template-columns: 1fr auto;
