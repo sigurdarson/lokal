@@ -420,13 +420,6 @@
   max-width: 26rem;
 }
 
-.eyebrowLabel {
-  margin: 0 0 var(--space-4);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--text-aa);
-}
-
 .outcomesTitle {
   font-size: var(--font-size-3xl);
   font-weight: 650;

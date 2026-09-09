@@ -35,7 +35,6 @@ function Home() {
 
       <section className={styles.outcomes} id="what-it-does">
         <div className={styles.outcomesIntro}>
-          <p className={styles.eyebrowLabel}>What it does</p>
           <h2 className={styles.outcomesTitle}>Everything listening, with the context you actually need.</h2>
           <p className={styles.outcomesLede}>
             Dev servers, databases, containers and the odd forgotten process pile up over a day. Lokal shows what is
