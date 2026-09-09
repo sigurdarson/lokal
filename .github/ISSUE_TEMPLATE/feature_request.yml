@@ -1,0 +1,22 @@
+name: Feature request
+description: Suggest an improvement or a new service definition
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that Lokal does not help with today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: If you have a specific idea, describe it. For a new service, include port, process name, and a typical command line.
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: This can be done without adding a dependency or network call

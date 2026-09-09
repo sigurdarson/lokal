@@ -1,0 +1,38 @@
+name: Bug report
+description: Something is wrong or missing in Lokal
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you expect, and what did Lokal do instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start `pnpm dev` in ~/code/foo
+        2. Open Lokal
+        3. Port 5173 is listed under "Other" instead of "foo"
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Lokal and macOS versions
+      placeholder: Lokal 0.2.0, macOS 26.6.2
+    validations:
+      required: true
+  - type: textarea
+    id: lsof
+    attributes:
+      label: Output of `lsof -nP -iTCP -sTCP:LISTEN` (if a port is missing or mislabelled)
+      render: shell
+  - type: dropdown
+    id: docker
+    attributes:
+      label: Container runtime involved?
+      options: [None, Docker Desktop, OrbStack, Other]
