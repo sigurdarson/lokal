@@ -1,0 +1,178 @@
+name: Release
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_26.6.app
+  SPARKLE_VERSION: 2.9.6
+  SPARKLE_SHA256: 52bf9e88cdd972fc0c81501377a880e90d47031bd8ca5462488f843e2609e192
+
+jobs:
+  release:
+    name: Sign, notarize, publish
+    runs-on: macos-26
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          project_version="$(grep -m1 -oE 'MARKETING_VERSION = [^;]+' app/Lokal.xcodeproj/project.pbxproj | awk '{print $3}')"
+          if [[ "$project_version" != "$version" ]]; then
+            echo "Tag is v$version but the project says $project_version" >&2
+            exit 1
+          fi
+          if ! grep -q "^## \[$version\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no section for $version" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Import signing certificate
+        env:
+          APPLE_CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: app/scripts/import-certificate.sh
+
+      - name: Archive
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        working-directory: app
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project Lokal.xcodeproj -scheme Lokal -configuration Release \
+            -archivePath build/Lokal.xcarchive \
+            -derivedDataPath build/DerivedData \
+            DEVELOPMENT_TEAM="$APPLE_TEAM_ID" \
+            2>&1 | tee build/archive.log | grep -E "error:|warning:|ARCHIVE "
+
+      - name: Export with Developer ID
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        working-directory: app
+        run: |
+          sed "s/TEAM_ID_PLACEHOLDER/$APPLE_TEAM_ID/" ExportOptions.plist > build/ExportOptions.plist
+          xcodebuild -exportArchive \
+            -archivePath build/Lokal.xcarchive \
+            -exportOptionsPlist build/ExportOptions.plist \
+            -exportPath build/export > build/export.log
+          codesign --verify --deep --strict --verbose=2 build/export/Lokal.app
+          codesign -d --verbose=2 build/export/Lokal.app 2>&1 | grep -q "flags=.*runtime" || { echo "Hardened runtime missing" >&2; exit 1; }
+
+      - name: Notarize and staple the app
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        working-directory: app
+        run: |
+          mkdir -p build/dist
+          ditto -c -k --keepParent build/export/Lokal.app build/notarize.zip
+          scripts/notarize.sh build/notarize.zip
+          xcrun stapler staple build/export/Lokal.app
+          ditto -c -k --keepParent build/export/Lokal.app "build/dist/Lokal-$VERSION.zip"
+
+      - name: Build, sign, notarize and staple the disk image
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
+          APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
+        working-directory: app
+        run: |
+          scripts/make-dmg.sh build/export/Lokal.app "build/dist/Lokal-$VERSION.dmg"
+          codesign --sign "Developer ID Application" --timestamp "build/dist/Lokal-$VERSION.dmg"
+          scripts/notarize.sh "build/dist/Lokal-$VERSION.dmg"
+          xcrun stapler staple "build/dist/Lokal-$VERSION.dmg"
+          spctl --assess --type open --context context:primary-signature -v "build/dist/Lokal-$VERSION.dmg"
+
+      - name: Update the Sparkle appcast
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          curl -sSL -o "$RUNNER_TEMP/sparkle.tar.xz" "https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz"
+          echo "$SPARKLE_SHA256  $RUNNER_TEMP/sparkle.tar.xz" | shasum -a 256 -c -
+          mkdir -p "$RUNNER_TEMP/sparkle" && tar -xf "$RUNNER_TEMP/sparkle.tar.xz" -C "$RUNNER_TEMP/sparkle"
+          mkdir -p build/appcast
+          cp "app/build/dist/Lokal-$VERSION.zip" build/appcast/
+          printf '%s' "$SPARKLE_PRIVATE_KEY" | "$RUNNER_TEMP/sparkle/bin/generate_appcast" \
+            --ed-key-file - \
+            --download-url-prefix "https://github.com/sigurdarson/lokal/releases/download/v$VERSION/" \
+            --link "https://lokal.sigurdarson.is" \
+            --full-release-notes-url "https://lokal.sigurdarson.is/changelog" \
+            --maximum-versions 5 \
+            -o web/public/appcast.xml \
+            build/appcast
+          grep -q "sparkle:version=\"" web/public/appcast.xml || grep -q "<sparkle:version>" web/public/appcast.xml
+
+      - name: Publish the GitHub Release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scripts/changelog-notes.sh "$VERSION" > build/notes.md
+          gh release create "v$VERSION" \
+            --title "Lokal $VERSION" \
+            --notes-file build/notes.md \
+            --verify-tag \
+            "app/build/dist/Lokal-$VERSION.dmg" \
+            "app/build/dist/Lokal-$VERSION.zip"
+
+      - name: Open a PR with the appcast, download redirect and cask
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sha="$(shasum -a 256 "app/build/dist/Lokal-$VERSION.dmg" | cut -d' ' -f1)"
+          scripts/update-release-pointers.sh "$VERSION" "$sha"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "release/assets-v$VERSION"
+          git add web/public/appcast.xml web/public/_redirects homebrew/Casks/lokal.rb
+          git commit -m "chore(release): publish v$VERSION assets"
+          git push -u origin "release/assets-v$VERSION"
+          gh pr create --base main \
+            --title "chore(release): publish v$VERSION assets" \
+            --body "Generated by the release workflow for v$VERSION. Updates the Sparkle appcast, the /download redirect and the cask (sha256 $sha). Merging deploys the site."
+
+      - name: Mirror the cask to sigurdarson/homebrew-tap
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          git clone --depth 1 "https://x-access-token:$HOMEBREW_TAP_TOKEN@github.com/sigurdarson/homebrew-tap.git" "$RUNNER_TEMP/tap"
+          mkdir -p "$RUNNER_TEMP/tap/Casks"
+          cp homebrew/Casks/lokal.rb "$RUNNER_TEMP/tap/Casks/lokal.rb"
+          cd "$RUNNER_TEMP/tap"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/lokal.rb
+          git commit -m "lokal $VERSION" || echo "Cask unchanged"
+          git push origin HEAD:main
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-logs
+          path: |
+            app/build/*.log
+            app/build/DerivedData/Logs/Build/*.xcactivitylog
+          if-no-files-found: ignore

@@ -90,3 +90,17 @@ jobs:
           test -f dist/client/changelog.html
           test -f dist/client/appcast.xml
           grep -q "^/download " dist/client/_redirects
+
+  homebrew:
+    name: Cask style
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+      - run: brew style homebrew/Casks/lokal.rb
+
+  scripts:
+    name: Shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: shellcheck scripts/*.sh app/scripts/*.sh

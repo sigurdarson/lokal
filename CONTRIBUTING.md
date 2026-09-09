@@ -58,3 +58,13 @@ Manifest parsers live in `app/LokalCore/Sources/LokalCore/Projects/`. Each parse
 ## Reporting bugs
 
 Use the bug report template. Include your macOS version, how the process was started, and the output of `lsof -nP -iTCP -sTCP:LISTEN` if the port is missing from Lokal.
+
+## Releasing (maintainers)
+
+1. Make sure `CHANGELOG.md` has entries under `[Unreleased]`.
+2. Run `scripts/release.sh X.Y.Z`. It moves the entries under a dated `X.Y.Z` heading, sets the version in the Xcode project, and opens a PR.
+3. Squash-merge that PR, then run `scripts/tag-release.sh X.Y.Z`. It tags `main` and pushes the tag.
+4. The `Release` workflow archives, signs with Developer ID, notarizes and staples a `.dmg` and a `.zip`, creates the GitHub Release, regenerates the signed Sparkle appcast, opens a second PR that updates `web/public/_redirects`, `web/public/appcast.xml` and `homebrew/Casks/lokal.rb`, and mirrors the cask to `sigurdarson/homebrew-tap`.
+5. Squash-merge the assets PR. That deploys the website, which makes the update visible to existing installs and to Homebrew.
+
+Secrets used by the workflow: `APPLE_CERTIFICATE_P12`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_TEAM_ID`, `APPLE_API_KEY_ID`, `APPLE_API_ISSUER_ID`, `APPLE_API_KEY_P8`, `SPARKLE_PRIVATE_KEY`, `HOMEBREW_TAP_TOKEN`, plus `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` for the site. The repository setting "Allow GitHub Actions to create and approve pull requests" must be on for the assets PR.
