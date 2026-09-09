@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '~/components/Button'
 import { CopyButton } from '~/components/CopyButton'
 import { MenuBarClock } from '~/components/MenuBarClock'
+import { useEffect, useState } from 'react'
 import styles from '~/components/Home.module.css'
 
 export const Route = createFileRoute('/')({
@@ -100,7 +101,7 @@ function Feature({ title, children }: { title: string; children: React.ReactNode
 function Showcase() {
   return (
     <div className={styles.showcase}>
-      <div className={styles.screen} role="img" aria-label="Illustration of the Lokal panel open from the macOS menu bar">
+      <section className={styles.screen} aria-label="Interactive preview of the Lokal panel open from the macOS menu bar">
         <div className={styles.menubar}>
           <div className={styles.menubarLeft}>
             <span className={styles.menubarApp}>Finder</span>
@@ -127,7 +128,7 @@ function Showcase() {
         <div className={styles.desktop}>
           <MockPanel />
         </div>
-      </div>
+      </section>
     </div>
   )
 }
@@ -161,26 +162,78 @@ function BatteryGlyph() {
   )
 }
 
-/** A static rendition of the panel, so the page works without a screenshot. */
+type MockEntry = {
+  id: string
+  group: 'shop' | 'Containers' | 'Services'
+  label: string
+  chip?: string
+  detail: string
+  port: string
+}
+
+const mockEntries: MockEntry[] = [
+  { id: 'vite', group: 'shop', label: 'Vite', chip: 'web', detail: 'node · 48211', port: '5173' },
+  { id: 'rails', group: 'shop', label: 'Rails', chip: 'api', detail: 'puma · 48090', port: '3000' },
+  { id: 'db', group: 'Containers', label: 'shop-db', detail: 'postgres:16', port: '5433' },
+  { id: 'pg', group: 'Services', label: 'Postgres', detail: 'postgres · 812', port: '5432' },
+  { id: 'redis', group: 'Services', label: 'Redis', detail: 'redis-server · 815', port: '6379' },
+]
+
+const groups: MockEntry['group'][] = ['shop', 'Containers', 'Services']
+
+/** A working miniature of the panel. Kill asks for confirmation, removes the row, and everything comes back later. */
 function MockPanel() {
+  const [confirming, setConfirming] = useState<string | null>(null)
+  const [killed, setKilled] = useState<string[]>([])
+
+  useEffect(() => {
+    if (confirming === null) return
+    const timer = setTimeout(() => setConfirming(null), 4000)
+    return () => clearTimeout(timer)
+  }, [confirming])
+
+  useEffect(() => {
+    if (killed.length === 0) return
+    const timer = setTimeout(() => setKilled([]), 6000)
+    return () => clearTimeout(timer)
+  }, [killed])
+
+  const visible = mockEntries.filter((entry) => !killed.includes(entry.id))
+
   return (
     <div className={styles.panel}>
       <div className={styles.panelHeader}>
         <span className={styles.panelTitle}>Lokal</span>
-        <span className={styles.panelCount}>5 ports · 12 hidden</span>
+        <span className={styles.panelCount}>
+          {visible.length} {visible.length === 1 ? 'port' : 'ports'} · 12 hidden
+        </span>
         <span className={styles.panelRefresh} aria-hidden="true">
           <RefreshGlyph />
         </span>
       </div>
-      <div className={styles.group}>shop</div>
-      <Row label="Vite" chip="web" detail="node · 48211" port="5173" />
-      <Row label="Rails" chip="api" detail="puma · 48090" port="3000" confirm />
-      <div className={styles.more}>2 hidden ports</div>
-      <div className={styles.group}>Containers</div>
-      <Row label="shop-db" detail="postgres:16" port="5433" />
-      <div className={styles.group}>Services</div>
-      <Row label="Postgres" detail="postgres · 812" port="5432" />
-      <Row label="Redis" detail="redis-server · 815" port="6379" />
+      {groups.map((group) => {
+        const entries = visible.filter((entry) => entry.group === group)
+        if (entries.length === 0) return null
+        return (
+          <div key={group}>
+            <div className={styles.group}>{group}</div>
+            {entries.map((entry) => (
+              <Row
+                key={entry.id}
+                entry={entry}
+                confirming={confirming === entry.id}
+                onRequestKill={() => setConfirming(entry.id)}
+                onCancel={() => setConfirming(null)}
+                onConfirm={() => {
+                  setConfirming(null)
+                  setKilled((current) => [...current, entry.id])
+                }}
+              />
+            ))}
+            {group === 'shop' ? <div className={styles.more}>2 hidden ports</div> : null}
+          </div>
+        )
+      })}
       <div className={styles.panelFooter}>
         <Button variant="secondary" size="compact" render={<span />}>
           Settings
@@ -189,6 +242,60 @@ function MockPanel() {
           Quit
         </Button>
       </div>
+    </div>
+  )
+}
+
+function Row({
+  entry,
+  confirming,
+  onRequestKill,
+  onCancel,
+  onConfirm,
+}: {
+  entry: MockEntry
+  confirming: boolean
+  onRequestKill: () => void
+  onCancel: () => void
+  onConfirm: () => void
+}) {
+  return (
+    <div className={styles.row}>
+      <div className={styles.rowText}>
+        <div className={styles.rowLabel}>
+          {entry.label}
+          {entry.chip ? <span className={styles.chip}>{entry.chip}</span> : null}
+        </div>
+        <div className={styles.rowDetail}>
+          <span className={styles.port}>{entry.port}</span> · {entry.detail}
+        </div>
+      </div>
+      {confirming ? (
+        <div className={styles.killConfirm}>
+          <button type="button" className={styles.killConfirmAction} onClick={onConfirm}>
+            Kill
+          </button>
+          <button type="button" className={styles.killConfirmCancel} onClick={onCancel} aria-label="Cancel">
+            <CloseGlyph />
+          </button>
+        </div>
+      ) : (
+        <div className={styles.rowActions}>
+          <a
+            className={styles.iconButton}
+            href={`http://localhost:${entry.port}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Open localhost:${entry.port} in a new tab`}
+            onClick={(event) => event.preventDefault()}
+          >
+            <OpenGlyph />
+          </a>
+          <button type="button" className={styles.iconButton} onClick={onRequestKill} aria-label={`Kill ${entry.label}`}>
+            <CloseGlyph />
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -202,38 +309,19 @@ function RefreshGlyph() {
   )
 }
 
-function Row({
-  label,
-  chip,
-  detail,
-  port,
-  confirm,
-}: {
-  label: string
-  chip?: string
-  detail: string
-  port: string
-  confirm?: boolean
-}) {
+function OpenGlyph() {
   return (
-    <div className={styles.row}>
-      <div className={styles.rowText}>
-        <div className={styles.rowLabel}>
-          {label}
-          {chip ? <span className={styles.chip}>{chip}</span> : null}
-        </div>
-        <div className={styles.rowDetail}>
-          <span className={styles.port}>{port}</span> · {detail}
-        </div>
-      </div>
-      {confirm ? (
-        <div className={styles.killConfirm}>
-          <b>Kill</b>
-          <i>×</i>
-        </div>
-      ) : (
-        <div className={styles.kill} />
-      )}
-    </div>
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 3.5H4.5A1.5 1.5 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13H11a1.5 1.5 0 0 0 1.5-1.5V10" />
+      <path d="M9.5 2.5H13.5V6.5M13.5 2.5L8 8" />
+    </svg>
+  )
+}
+
+function CloseGlyph() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
   )
 }
