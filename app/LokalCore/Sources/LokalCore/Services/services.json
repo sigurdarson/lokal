@@ -1,5 +1,5 @@
 {
-  "$comment": "Well-known local services. See CONTRIBUTING.md for the format. Matching order: processNames, commandPatterns, then ports (hint only).",
+  "$comment": "Well-known local services. See CONTRIBUTING.md for the format. Matching order: processNames, commandPatterns, then ports (hint only). auxiliary: true marks supporting ports that are hidden by default.",
   "services": [
     { "id": "postgres", "name": "Postgres", "kind": "database", "icon": "cylinder.split.1x2", "ports": [5432], "processNames": ["postgres", "postgres_real"], "urlTemplate": "postgres://localhost:{port}", "openInBrowser": false },
     { "id": "mysql", "name": "MySQL", "kind": "database", "icon": "cylinder.split.1x2", "ports": [3306], "processNames": ["mysqld"], "urlTemplate": "mysql://localhost:{port}", "openInBrowser": false },
@@ -26,6 +26,9 @@
     { "id": "webpack", "name": "webpack dev server", "kind": "dev-server", "icon": "shippingbox", "commandPatterns": ["webpack(-dev-server)?(\\.js)?\\s+serve|webpack-dev-server"] },
     { "id": "expo", "name": "Expo", "kind": "dev-server", "icon": "iphone", "ports": [8081, 19000], "commandPatterns": ["(^|/)expo(\\.js)?\\s+start|metro"] },
     { "id": "wrangler", "name": "Wrangler", "kind": "dev-server", "icon": "cloud", "ports": [8787], "commandPatterns": ["(^|/)wrangler(\\.js)?\\s+(dev|pages)"] },
+    { "id": "workerd", "name": "workerd", "kind": "dev-server", "icon": "cloud", "processNames": ["workerd"] },
+    { "id": "node-inspector", "name": "Node inspector", "kind": "tool", "icon": "ladybug", "ports": [9229, 9230, 9231, 9232], "openInBrowser": false, "auxiliary": true },
+    { "id": "python-debugger", "name": "Python debugger", "kind": "tool", "icon": "ladybug", "ports": [5678], "openInBrowser": false, "auxiliary": true },
     { "id": "rails", "name": "Rails", "kind": "dev-server", "icon": "diamond", "ports": [3000], "processNames": ["puma"], "commandPatterns": ["(^|/)(rails|puma|unicorn)(\\s|$)|bin/rails"] },
     { "id": "django", "name": "Django", "kind": "dev-server", "icon": "leaf", "ports": [8000], "commandPatterns": ["manage\\.py\\s+runserver|django"] },
     { "id": "flask", "name": "Flask", "kind": "dev-server", "icon": "flask", "ports": [5000], "commandPatterns": ["(^|/)flask(\\s|$)|flask\\s+run"] },

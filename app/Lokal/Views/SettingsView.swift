@@ -38,6 +38,15 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
             }
 
+            Section("Ports") {
+                Toggle("Always show hidden ports", isOn: $preferences.showsAuxiliaryPorts)
+                Text(
+                    "Lokal focuses on development work. Debug inspectors, ephemeral sockets (49152 and up), GUI apps such as Spotify or Raycast, and system services are folded behind a \"hidden ports\" row in each group. Turn this on to list everything."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
             Section("Killing") {
                 Toggle("Force kill if a process ignores the request", isOn: $preferences.forceKill)
                 Text("Lokal sends SIGTERM first and waits about a second. With this on, it follows up with SIGKILL.")

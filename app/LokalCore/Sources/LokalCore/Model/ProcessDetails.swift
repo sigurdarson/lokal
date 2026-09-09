@@ -58,4 +58,17 @@ public struct ProcessDetails: Sendable, Hashable {
     public var commandLine: String {
         arguments.joined(separator: " ")
     }
+
+    /// Runs from inside an application bundle (Spotify, Raycast, browsers, and so on).
+    public var isBundledApplication: Bool {
+        executablePath?.contains(".app/Contents/") == true
+    }
+
+    /// Runs from a system location rather than a user's toolchain or project.
+    public var isSystemProcess: Bool {
+        guard let executablePath else { return false }
+        return Self.systemPrefixes.contains { executablePath.hasPrefix($0) }
+    }
+
+    static let systemPrefixes = ["/System/", "/usr/libexec/", "/usr/sbin/", "/sbin/", "/Library/"]
 }

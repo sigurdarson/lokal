@@ -6,12 +6,12 @@ import Testing
 @Suite("Snapshot grouping")
 struct SnapshotTests {
     private func entry(
-        pid: pid_t, port: UInt16, name: String = "node", project: Project? = nil,
+        pid: pid_t, port: UInt16, name: String = "node", path: String? = nil, project: Project? = nil,
         service: ServiceMatch? = nil, container: ContainerInfo? = nil
     ) -> PortEntry {
         PortEntry(
             socket: ListeningSocket(pid: pid, port: port, family: .ipv4, address: .loopback),
-            process: ProcessDetails(pid: pid, name: name),
+            process: ProcessDetails(pid: pid, name: name, executablePath: path),
             service: service, project: project, container: container
         )
     }
@@ -43,6 +43,60 @@ struct SnapshotTests {
         #expect(lokal.entries.map(\.port) == [4000, 5173])
         #expect(lokal.kind == .project)
         #expect(snapshot.groups.last?.entries.first?.label == "custom")
+    }
+
+    @Test("Roles: ephemeral and auxiliary-service ports fold, containers never do")
+    func roles() throws {
+        let vite = ServiceMatch(service: ServiceCatalog.bundled.service(id: "vite")!, confidence: .high)
+        let inspector = ServiceMatch(
+            service: ServiceCatalog.bundled.service(id: "node-inspector")!, confidence: .medium)
+        let container = ContainerInfo(id: "c", name: "db", image: "postgres:16", publishedPorts: [55432])
+
+        #expect(entry(pid: 1, port: 3001, service: vite).role == .primary)
+        #expect(entry(pid: 1, port: 62389, service: vite).role == .auxiliary, "ephemeral port of a known server")
+        #expect(entry(pid: 1, port: 9230, service: inspector).role == .auxiliary)
+        #expect(entry(pid: 2, port: 54708, name: "workerd").role == .auxiliary)
+        #expect(entry(pid: 2, port: 8787, name: "workerd").role == .primary)
+        #expect(entry(pid: 3, port: 55432, name: "com.docker.backend", container: container).role == .primary)
+        #expect(entry(pid: 4, port: 49151).role == .primary)
+        #expect(entry(pid: 4, port: 49152).role == .auxiliary)
+
+        // GUI apps and system daemons fold unless they belong to a project or a known service.
+        let spotify = "/Applications/Spotify.app/Contents/MacOS/Spotify"
+        #expect(entry(pid: 5, port: 4381, name: "Spotify", path: spotify).role == .auxiliary)
+        #expect(
+            entry(pid: 6, port: 7265, name: "Raycast", path: "/Applications/Raycast.app/Contents/MacOS/Raycast").role
+                == .auxiliary)
+        #expect(
+            entry(
+                pid: 7, port: 5000, name: "ControlCenter",
+                path: "/System/Library/CoreServices/ControlCenter.app/Contents/MacOS/ControlCenter"
+            ).role == .auxiliary)
+        #expect(entry(pid: 8, port: 631, name: "cupsd", path: "/usr/sbin/cupsd").role == .auxiliary)
+        let project = Project(name: "site", path: "/r/site", manifest: .packageJSON)
+        #expect(
+            entry(
+                pid: 9, port: 3000, name: "Code Helper",
+                path: "/Applications/Visual Studio Code.app/Contents/MacOS/Code Helper", project: project
+            ).role == .primary)
+        let postgres = ServiceMatch(service: ServiceCatalog.bundled.service(id: "postgres")!, confidence: .high)
+        #expect(
+            entry(
+                pid: 10, port: 5432, name: "postgres",
+                path: "/Applications/Postgres.app/Contents/Versions/16/bin/postgres", service: postgres
+            ).role == .primary)
+        #expect(entry(pid: 11, port: 8080, name: "myserver", path: "/Users/x/go/bin/myserver").role == .primary)
+
+        let snapshot = Snapshot(entries: [
+            entry(pid: 1, port: 3001, project: project, service: vite),
+            entry(pid: 1, port: 9230, project: project, service: inspector),
+            entry(pid: 1, port: 62389, project: project, service: vite),
+        ])
+        let group = try #require(snapshot.groups.first)
+        #expect(group.primaryEntries.map(\.port) == [3001])
+        #expect(group.auxiliaryEntries.map(\.port) == [9230, 62389])
+        #expect(snapshot.primaryCount == 1)
+        #expect(snapshot.auxiliaryCount == 2)
     }
 
     @Test("Entry label and URL precedence")

@@ -2,6 +2,17 @@ import Foundation
 
 /// One row in the panel: a listening port with everything Lokal resolved about it.
 public struct PortEntry: Sendable, Hashable, Identifiable {
+    /// Whether a port is part of someone's development work, or noise around it.
+    public enum Role: Sendable, Hashable {
+        /// A dev server, database, tool or container port. Shown by default.
+        case primary
+        /// Debug inspectors, ephemeral internal sockets, GUI apps and system daemons. Folded away by default.
+        case auxiliary
+    }
+
+    /// First port of the IANA/macOS dynamic range. Servers people run on purpose almost never live here.
+    public static let ephemeralPortStart: UInt16 = 49152
+
     public let socket: ListeningSocket
     public let process: ProcessDetails
     public let service: ServiceMatch?
@@ -27,6 +38,25 @@ public struct PortEntry: Sendable, Hashable, Identifiable {
 
     public var port: UInt16 { socket.port }
     public var pid: pid_t { socket.pid }
+
+    /// Decided top down:
+    /// 1. Containers are primary.
+    /// 2. Ports of auxiliary services (inspectors) are auxiliary; a service that lists this exact port is primary.
+    /// 3. Ephemeral-range ports are auxiliary. A dev server's process match says nothing about its extra sockets.
+    /// 4. Anything that resolved to a project, or to a confident service, is primary.
+    /// 5. GUI applications and system daemons (Spotify, Raycast, launchd helpers) are auxiliary.
+    /// 6. Everything else, such as a hand-built binary run from a shell, is primary.
+    public var role: Role {
+        if container != nil { return .primary }
+        if let service, service.confidence >= .medium {
+            if service.service.auxiliary { return .auxiliary }
+            if service.service.ports.contains(port) { return .primary }
+        }
+        if port >= Self.ephemeralPortStart { return .auxiliary }
+        if project != nil || confidentService != nil { return .primary }
+        if process.isBundledApplication || process.isSystemProcess { return .auxiliary }
+        return .primary
+    }
 
     /// Service match that is confident enough to name the row.
     public var confidentService: ServiceDefinition? {

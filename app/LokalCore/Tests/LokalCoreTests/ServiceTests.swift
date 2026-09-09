@@ -38,6 +38,7 @@ struct ServiceCatalogTests {
         let catalog = try ServiceCatalog(data: Data(json.utf8))
         let service = try #require(catalog.service(id: "x"))
         #expect(service.openInBrowser)
+        #expect(!service.auxiliary)
         #expect(service.processNames.isEmpty)
         #expect(service.url(forPort: 1) == "http://localhost:1")
     }
@@ -81,6 +82,16 @@ struct ServiceMatcherTests {
         #expect(rust?.confidence == .low)
 
         #expect(matcher.match(process: process("whatever"), port: 61234) == nil)
+    }
+
+    @Test("Auxiliary service ports win over the process match")
+    func auxiliaryPort() {
+        let vite = process("node", ["node", "/p/node_modules/vite/bin/vite.js", "dev"])
+        #expect(matcher.match(process: vite, port: 3001)?.service.id == "vite")
+        let inspector = matcher.match(process: vite, port: 9230)
+        #expect(inspector?.service.id == "node-inspector")
+        #expect(inspector?.service.auxiliary == true)
+        #expect(inspector?.confidence == .medium)
     }
 
     @Test("Executable name is considered as well as kernel name")

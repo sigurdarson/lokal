@@ -67,6 +67,12 @@ Each entry looks like this:
 
 Matching order: process name, then command-line pattern, then port. A port-only match is treated as a hint rather than a certainty.
 
+Set `"auxiliary": true` for supporting ports such as debug inspectors.
+
+### What is hidden by default
+
+Lokal is about development work, so each group folds the noise behind a "hidden ports" row: debug inspectors, sockets in the ephemeral range (49152 and up), GUI applications such as Spotify or Raycast, and system daemons. A port stays visible when it belongs to a project, matches a known service, or is published by a container. A setting lists everything instead.
+
 To add a service, append an object to the file and run the tests. A test validates ids, kinds, regexes, and that every icon is a real SF Symbol. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Docker and OrbStack

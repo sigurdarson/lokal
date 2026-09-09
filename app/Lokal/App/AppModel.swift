@@ -49,7 +49,30 @@ final class AppModel {
         updateBadgePolling()
     }
 
-    var listeningCount: Int { snapshot.entries.count }
+    /// What the header and badge count: everything, or only primary ports when auxiliary ones are folded.
+    var listeningCount: Int {
+        preferences.showsAuxiliaryPorts ? snapshot.entries.count : snapshot.primaryCount
+    }
+
+    var hiddenCount: Int {
+        preferences.showsAuxiliaryPorts ? 0 : snapshot.auxiliaryCount
+    }
+
+    // MARK: - Auxiliary port disclosure
+
+    private(set) var expandedGroups: Set<String> = []
+
+    func isExpanded(_ groupID: String) -> Bool {
+        expandedGroups.contains(groupID)
+    }
+
+    func toggleExpanded(_ groupID: String) {
+        if expandedGroups.contains(groupID) {
+            expandedGroups.remove(groupID)
+        } else {
+            expandedGroups.insert(groupID)
+        }
+    }
 
     // MARK: - Lifecycle
 

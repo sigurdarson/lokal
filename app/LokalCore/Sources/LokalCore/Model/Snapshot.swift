@@ -22,6 +22,9 @@ public struct ProjectGroup: Sendable, Hashable, Identifiable {
         self.project = project
         self.entries = entries
     }
+
+    public var primaryEntries: [PortEntry] { entries.filter { $0.role == .primary } }
+    public var auxiliaryEntries: [PortEntry] { entries.filter { $0.role == .auxiliary } }
 }
 
 /// Everything listening at one moment in time.
@@ -39,6 +42,9 @@ public struct Snapshot: Sendable, Hashable {
     public static let empty = Snapshot(entries: [], capturedAt: .distantPast)
 
     public var isEmpty: Bool { entries.isEmpty }
+
+    public var primaryCount: Int { entries.filter { $0.role == .primary }.count }
+    public var auxiliaryCount: Int { entries.count - primaryCount }
 }
 
 enum SnapshotBuilder {
