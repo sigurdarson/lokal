@@ -46,17 +46,17 @@ struct PortRowView: View {
 
             Spacer(minLength: 8)
 
-            if killState == nil {
-                HStack(spacing: 4) {
+            HStack(spacing: 4) {
+                if killState == nil {
                     IconButton(symbol: "arrow.up.right.square", title: "Open in browser") {
                         model.open(entry)
                     }
                     .disabled(!entry.opensInBrowser)
-                    KillButton(entry: entry)
+                    .transition(.opacity)
                 }
-            } else {
                 KillButton(entry: entry)
             }
+            .animation(Theme.springPop, value: killState == nil)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 7)

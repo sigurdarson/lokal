@@ -2,13 +2,16 @@ import AppKit
 import LokalCore
 import SwiftUI
 
-/// The kill control. Idle it is an × that winds up on hover; tapped, it pops into a capsule on the
-/// inverse surface with Kill and cancel. Return confirms, Escape cancels, Option-click skips.
-/// Reduce Motion replaces the spring and pop with crossfades.
+/// The kill control. Idle it is an × that winds up on hover; tapped, its background morphs in place
+/// into a capsule on the inverse surface with Kill and cancel. Return confirms, Escape cancels,
+/// Option-click skips. Reduce Motion replaces the spring with a crossfade.
 struct KillButton: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Namespace private var namespace
     let entry: PortEntry
+
+    @State private var hovering = false
 
     private var state: KillState? { model.killStates[entry.id] }
 
@@ -16,19 +19,13 @@ struct KillButton: View {
         ZStack(alignment: .trailing) {
             switch state {
             case nil:
-                IconButton(symbol: "xmark", title: "Kill process (Option-click to skip confirmation)", windsUp: true) {
-                    model.requestKill(entry, skipConfirmation: NSEvent.modifierFlags.contains(.option))
-                }
-                .accessibilityLabel("Kill \(entry.label)")
-                .transition(.opacity)
+                idleButton
             case .confirming:
                 confirmCapsule
-                    .transition(popTransition)
             case .killing:
                 ProgressView()
                     .controlSize(.small)
                     .frame(width: Theme.iconButtonSize, height: Theme.iconButtonSize)
-                    .transition(.opacity)
             case .failed(let message):
                 HStack(spacing: 4) {
                     Image(systemName: "exclamationmark.triangle")
@@ -39,14 +36,37 @@ struct KillButton: View {
                 .lineLimit(1)
                 .frame(height: Theme.iconButtonSize)
                 .accessibilityLabel("Kill failed: \(message)")
-                .transition(.opacity)
             }
         }
         .animation(reduceMotion ? Theme.fast : Theme.springPop, value: state)
     }
 
-    private var popTransition: AnyTransition {
-        reduceMotion ? .opacity : .scale(scale: 0.6, anchor: .trailing).combined(with: .opacity)
+    /// The capsule is the one element shared between states; matchedGeometryEffect morphs it.
+    private func capsule(_ fill: Color) -> some View {
+        Capsule()
+            .fill(fill)
+            .matchedGeometryEffect(id: "capsule", in: namespace)
+    }
+
+    private var idleButton: some View {
+        Button {
+            model.requestKill(entry, skipConfirmation: NSEvent.modifierFlags.contains(.option))
+        } label: {
+            Image(systemName: "xmark")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(hovering ? Theme.textAAA : Theme.nontextAA)
+                .scaleEffect(hovering && !reduceMotion ? 1.2 : 1)
+                .rotationEffect(hovering && !reduceMotion ? .degrees(90) : .zero)
+                .frame(width: Theme.iconButtonSize, height: Theme.iconButtonSize)
+                .background(capsule(hovering ? Theme.surfaceHoverDecorative : Color.clear))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering = $0 }
+        .animation(reduceMotion ? Theme.fast : Theme.springPop, value: hovering)
+        .help("Kill process (Option-click to skip confirmation)")
+        .accessibilityLabel("Kill \(entry.label)")
+        .transition(.identity)
     }
 
     private var confirmCapsule: some View {
@@ -78,8 +98,9 @@ struct KillButton: View {
             .accessibilityLabel("Cancel")
         }
         .foregroundStyle(Theme.textOnInverseAAA)
-        .background(Theme.surfaceInverse, in: Capsule())
+        .background(capsule(Theme.surfaceInverse))
         .onHover { model.setConfirmationPaused(entry.id, $0) }
         .accessibilityElement(children: .contain)
+        .transition(.opacity)
     }
 }
