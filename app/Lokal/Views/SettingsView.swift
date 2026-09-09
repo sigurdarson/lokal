@@ -38,6 +38,15 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
             }
 
+            Section("Ports") {
+                Toggle("Always show internal ports", isOn: $preferences.showsAuxiliaryPorts)
+                Text(
+                    "Debug inspectors and sockets in the ephemeral range (49152 and up) are folded behind a \"more\" row per project. Turn this on to list everything."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
             Section("Killing") {
                 Toggle("Force kill if a process ignores the request", isOn: $preferences.forceKill)
                 Text("Lokal sends SIGTERM first and waits about a second. With this on, it follows up with SIGKILL.")

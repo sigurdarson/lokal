@@ -67,6 +67,8 @@ Each entry looks like this:
 
 Matching order: process name, then command-line pattern, then port. A port-only match is treated as a hint rather than a certainty.
 
+Set `"auxiliary": true` for supporting ports such as debug inspectors. Those, and any port in the ephemeral range (49152 and up), are folded behind a "more" row in each group so a single Vite process shows as one entry instead of three. A setting lists everything instead.
+
 To add a service, append an object to the file and run the tests. A test validates ids, kinds, regexes, and that every icon is a real SF Symbol. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Docker and OrbStack

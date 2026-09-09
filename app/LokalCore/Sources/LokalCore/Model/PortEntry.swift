@@ -2,6 +2,17 @@ import Foundation
 
 /// One row in the panel: a listening port with everything Lokal resolved about it.
 public struct PortEntry: Sendable, Hashable, Identifiable {
+    /// Whether a port is something the user runs on purpose, or plumbing behind it.
+    public enum Role: Sendable, Hashable {
+        /// A server, database or container port. Shown by default.
+        case primary
+        /// Debug inspectors, ephemeral internal sockets. Hidden behind a disclosure by default.
+        case auxiliary
+    }
+
+    /// First port of the IANA/macOS dynamic range. Servers people run on purpose almost never live here.
+    public static let ephemeralPortStart: UInt16 = 49152
+
     public let socket: ListeningSocket
     public let process: ProcessDetails
     public let service: ServiceMatch?
@@ -27,6 +38,18 @@ public struct PortEntry: Sendable, Hashable, Identifiable {
 
     public var port: UInt16 { socket.port }
     public var pid: pid_t { socket.pid }
+
+    /// Containers are always primary. Auxiliary services are never primary. Ephemeral-range ports are
+    /// auxiliary unless a matched service lists that exact port: a dev server's process match says nothing
+    /// about its extra sockets, but an explicit port in the catalog does.
+    public var role: Role {
+        if container != nil { return .primary }
+        if let service, service.confidence >= .medium {
+            if service.service.auxiliary { return .auxiliary }
+            if service.service.ports.contains(port) { return .primary }
+        }
+        return port >= Self.ephemeralPortStart ? .auxiliary : .primary
+    }
 
     /// Service match that is confident enough to name the row.
     public var confidentService: ServiceDefinition? {

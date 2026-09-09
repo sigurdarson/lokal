@@ -27,6 +27,8 @@ public struct ServiceDefinition: Codable, Sendable, Hashable, Identifiable {
     public let urlTemplate: String?
     /// Whether "Open in browser" makes sense for this service. Defaults to true.
     public let openInBrowser: Bool
+    /// Supporting infrastructure (debug inspectors, internal RPC ports) that is hidden by default. Defaults to false.
+    public let auxiliary: Bool
 
     public init(
         id: String,
@@ -37,7 +39,8 @@ public struct ServiceDefinition: Codable, Sendable, Hashable, Identifiable {
         processNames: [String] = [],
         commandPatterns: [String] = [],
         urlTemplate: String? = nil,
-        openInBrowser: Bool = true
+        openInBrowser: Bool = true,
+        auxiliary: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -48,10 +51,11 @@ public struct ServiceDefinition: Codable, Sendable, Hashable, Identifiable {
         self.commandPatterns = commandPatterns
         self.urlTemplate = urlTemplate
         self.openInBrowser = openInBrowser
+        self.auxiliary = auxiliary
     }
 
     private enum CodingKeys: String, CodingKey {
-        case id, name, kind, icon, ports, processNames, commandPatterns, urlTemplate, openInBrowser
+        case id, name, kind, icon, ports, processNames, commandPatterns, urlTemplate, openInBrowser, auxiliary
     }
 
     public init(from decoder: any Decoder) throws {
@@ -65,6 +69,7 @@ public struct ServiceDefinition: Codable, Sendable, Hashable, Identifiable {
         commandPatterns = try container.decodeIfPresent([String].self, forKey: .commandPatterns) ?? []
         urlTemplate = try container.decodeIfPresent(String.self, forKey: .urlTemplate)
         openInBrowser = try container.decodeIfPresent(Bool.self, forKey: .openInBrowser) ?? true
+        auxiliary = try container.decodeIfPresent(Bool.self, forKey: .auxiliary) ?? false
     }
 
     /// Resolves the URL template for a port.

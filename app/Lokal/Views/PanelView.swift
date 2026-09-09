@@ -46,11 +46,13 @@ struct PanelView: View {
     }
 
     private var countLabel: String {
-        switch model.listeningCount {
-        case 0: "nothing listening"
-        case 1: "1 port"
-        case let count: "\(count) ports"
-        }
+        let base =
+            switch model.listeningCount {
+            case 0: "nothing listening"
+            case 1: "1 port"
+            case let count: "\(count) ports"
+            }
+        return model.hiddenCount > 0 ? "\(base) · \(model.hiddenCount) internal" : base
     }
 
     @ViewBuilder

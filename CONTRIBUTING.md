@@ -46,7 +46,7 @@ Formatting uses the `swift format` bundled with the Xcode toolchain and the `.sw
 
 1. Open `app/LokalCore/Sources/LokalCore/Services/services.json`.
 2. Append an object. Required: `id` (lowercase, unique), `name`, `kind`, `icon` (an SF Symbol name), and at least one of `ports`, `processNames`, `commandPatterns`.
-3. Optional: `urlTemplate` (default `http://localhost:{port}`) and `openInBrowser` (default `true`).
+3. Optional: `urlTemplate` (default `http://localhost:{port}`), `openInBrowser` (default `true`), and `auxiliary` (default `false`; set it for debug inspectors and other supporting ports so they fold away by default).
 4. Run `swift test`. `ServiceCatalogTests` checks the file for duplicate ids, unknown kinds, invalid regexes, and icons that do not resolve.
 
 Prefer `processNames` and `commandPatterns` over bare `ports`. Port-only matches are treated as low-confidence hints.

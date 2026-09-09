@@ -66,6 +66,11 @@ public struct ServiceMatcher: Sendable {
                 consider(entry.service, .high)
             }
         }
+        // A port that belongs to an auxiliary service (a debug inspector, say) is labelled as that service
+        // even when the process itself is a known dev server: the process is Vite, but the port is the inspector.
+        if let indices = byPort[port], let auxiliary = indices.first(where: { compiled[$0].service.auxiliary }) {
+            return ServiceMatch(service: compiled[auxiliary].service, confidence: .medium)
+        }
         if best?.confidence == .high { return best }
 
         if let indices = byPort[port] {

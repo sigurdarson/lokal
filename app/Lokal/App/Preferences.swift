@@ -9,6 +9,7 @@ final class Preferences {
         static let forceKill = "forceKill"
         static let editorBundleID = "editorBundleID"
         static let terminalBundleID = "terminalBundleID"
+        static let showsAuxiliaryPorts = "showsAuxiliaryPorts"
     }
 
     private let defaults: UserDefaults
@@ -32,11 +33,17 @@ final class Preferences {
         didSet { defaults.set(terminalBundleID, forKey: Key.terminalBundleID) }
     }
 
+    /// Always list auxiliary ports (inspectors, ephemeral internal sockets) instead of folding them per group.
+    var showsAuxiliaryPorts: Bool {
+        didSet { defaults.set(showsAuxiliaryPorts, forKey: Key.showsAuxiliaryPorts) }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         showsBadge = defaults.bool(forKey: Key.showsBadge)
         forceKill = defaults.object(forKey: Key.forceKill) as? Bool ?? true
         editorBundleID = defaults.string(forKey: Key.editorBundleID) ?? ""
         terminalBundleID = defaults.string(forKey: Key.terminalBundleID) ?? ""
+        showsAuxiliaryPorts = defaults.bool(forKey: Key.showsAuxiliaryPorts)
     }
 }
