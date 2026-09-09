@@ -50,6 +50,7 @@
   background: var(--surface-raised);
   border-radius: var(--button-radius);
   padding: 0 var(--space-1) 0 0.875rem;
+  gap: var(--space-3);
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
 }
