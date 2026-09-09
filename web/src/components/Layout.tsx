@@ -35,7 +35,7 @@ export function Footer() {
       <a href="https://github.com/sigurdarson/lokal">Source</a>
       <a href="https://github.com/sigurdarson/lokal/issues">Issues</a>
       <a href="https://github.com/sigurdarson/lokal/security/policy">Security</a>
-      <span>Made by G. Sigurdarson</span>
+      <a href="https://sigurdarson.is">Made by G. Sigurdarson</a>
     </footer>
   )
 }

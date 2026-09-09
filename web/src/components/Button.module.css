@@ -23,6 +23,12 @@
   font-size: var(--font-size-xs);
 }
 
+/* Icon-only buttons are square. */
+.compact:has(> svg:only-child) {
+  width: var(--button-height-compact);
+  padding: 0;
+}
+
 .button[data-disabled] {
   opacity: 0.5;
   cursor: default;

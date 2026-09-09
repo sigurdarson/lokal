@@ -2,7 +2,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-r
 import { Footer, Header, Main } from '~/components/Layout'
 import globalCss from '~/styles/global.css?url'
 
-const title = 'Lokal — see what is running on localhost'
+const title = 'Lokal: see what is running on localhost'
 const description =
   'A free, open source macOS menu bar app that lists your localhost ports, the process behind each one, and the project it belongs to.'
 

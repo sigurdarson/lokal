@@ -1,19 +1,13 @@
+/* Equal breathing room above and below the hero text. */
 .hero {
   max-width: 40rem;
-  padding: var(--space-16) 0 var(--space-10);
+  padding: var(--space-16) 0;
 }
 
 @media (max-width: 54rem) {
   .hero {
-    padding-top: var(--space-12);
+    padding: var(--space-12) 0;
   }
-}
-
-.eyebrow {
-  color: var(--text-aa);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  margin: 0 0 var(--space-3);
 }
 
 .title {
@@ -50,6 +44,7 @@
   background: var(--surface-raised);
   border-radius: var(--button-radius);
   padding: 0 var(--space-1) 0 0.875rem;
+  gap: var(--space-3);
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
 }
@@ -142,7 +137,9 @@
 .panel {
   width: var(--panel-width);
   max-width: 100%;
-  background: var(--surface-raised);
+  background: color-mix(in oklch, var(--surface-raised) 92%, transparent);
+  backdrop-filter: blur(1.5rem) saturate(140%);
+  -webkit-backdrop-filter: blur(1.5rem) saturate(140%);
   border: var(--border-width) solid var(--border-decorative);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-raised);
@@ -193,10 +190,15 @@
 
 .row {
   display: grid;
-  grid-template-columns: 1fr auto 1.25rem;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: var(--space-3);
   padding: 0.4375rem var(--space-4);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.row:hover {
+  background: var(--surface-hover-decorative);
 }
 
 .rowText {
@@ -230,117 +232,173 @@
 .port {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  color: var(--text-aa);
-  font-size: var(--font-size-xs);
+  color: var(--text-muted-aaa);
 }
 
-.kill {
-  width: 1.25rem;
-  height: 1.25rem;
+.rowActions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--nontext-aa);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.iconButton:hover {
+  color: var(--text-aaa);
+  background: var(--surface-hover-decorative);
+}
+
+.iconButton svg {
+  transition: transform var(--duration-pop) var(--ease-spring);
+}
+
+.iconButton:hover svg {
+  transform: scale(1.15);
+}
+
+/* The kill control winds up on hover and pops the capsule open on click. */
+.killButton:hover svg {
+  transform: scale(1.2) rotate(90deg);
+}
+
+.killButton:active svg {
+  transform: scale(0.9) rotate(90deg);
 }
 
 .killConfirm {
-  grid-column: 2 / 4;
   justify-self: end;
   display: flex;
   align-items: center;
   background: var(--surface-inverse);
   color: var(--text-on-inverse-aaa);
   border-radius: var(--radius-full);
+  height: 1.5rem;
+  overflow: hidden;
+  transform-origin: right center;
+  animation: pop var(--duration-pop) var(--ease-spring) both;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.killConfirmAction,
+.killConfirmCancel {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.killConfirmAction {
+  padding: 0 0.625rem;
   font-size: 0.6875rem;
   font-weight: 600;
-  height: 1.375rem;
-  overflow: hidden;
-  position: relative;
 }
 
-.killConfirm b {
-  padding: 0 0.5625rem;
+.killConfirmAction:hover {
+  background: color-mix(in oklch, var(--text-on-inverse-aaa) 12%, transparent);
 }
 
-.killConfirm i {
-  padding: 0 var(--space-2);
-  font-style: normal;
-  font-weight: 700;
+.killConfirmCancel {
+  padding: 0 var(--space-2) 0 0.375rem;
   opacity: 0.7;
 }
 
-.killConfirm::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 0.125rem;
-  width: 62%;
-  background: color-mix(in oklch, var(--text-on-inverse-aaa) 75%, transparent);
+.killConfirmCancel:hover {
+  opacity: 1;
 }
 
-/* Sections */
-.section {
-  padding: var(--space-12) 0 0;
-}
-
-.sectionTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: 650;
-  margin-bottom: var(--space-5);
-}
-
-.features {
+/* Outcomes: intro on the left, a borderless two-by-two grid on the right */
+.outcomes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+  gap: var(--space-12) var(--space-16);
+  padding: var(--space-20) 0 0;
 }
 
-.feature {
+@media (max-width: 54rem) {
+  .outcomes {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    padding-top: var(--space-16);
+  }
+}
+
+.outcomesIntro {
+  max-width: 26rem;
+}
+
+.eyebrowLabel {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-aa);
+}
+
+.outcomesTitle {
+  font-size: var(--font-size-3xl);
+  font-weight: 650;
+  letter-spacing: var(--tracking-display);
+  margin-bottom: var(--space-4);
+}
+
+.outcomesLede {
+  margin: 0;
+  color: var(--text-muted-aaa);
+}
+
+.outcomesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-content: start;
+}
+
+@media (max-width: 40rem) {
+  .outcomesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.outcome {
+  background: var(--surface-raised);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  background: var(--surface-raised);
 }
 
-.feature h3 {
-  font-size: var(--font-size-base);
+.outcomeTitle {
+  font-size: var(--font-size-lg);
   font-weight: 600;
-  margin-bottom: 0.375rem;
+  margin: 0 0 var(--space-2);
 }
 
-.feature p {
+.outcomeBody {
   margin: 0;
   color: var(--text-muted-aaa);
   font-size: var(--font-size-sm);
-}
-
-.steps {
-  counter-reset: step;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--space-3);
-  max-width: var(--measure);
-}
-
-.steps li {
-  counter-increment: step;
-  display: grid;
-  grid-template-columns: 1.875rem 1fr;
-  gap: var(--space-3);
-  color: var(--text-muted-aaa);
-}
-
-.steps li::before {
-  content: counter(step);
-  width: 1.625rem;
-  height: 1.625rem;
-  border-radius: var(--radius-full);
-  background: var(--surface-sunken);
-  display: grid;
-  place-items: center;
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  color: var(--text-aaa);
-}
-
-.steps strong {
-  color: var(--text-aaa);
 }
