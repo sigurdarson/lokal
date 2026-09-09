@@ -1,23 +1,23 @@
 import LokalCore
 import SwiftUI
 
-/// The popover content: header, grouped list, footer.
+/// The popover content: header, grouped list, footer. Flat, borderless, on the raised surface.
 struct PanelView: View {
     @Environment(AppModel.self) private var model
-    let updaterModel: UpdaterViewModel
 
     @State private var contentHeight: CGFloat = 0
-    private let maximumListHeight: CGFloat = 480
+    private let maximumListHeight: CGFloat = 520
 
     var body: some View {
         VStack(spacing: 0) {
             header
-            Divider()
             list
-            Divider()
             footer
         }
-        .frame(width: 360)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
+        .frame(width: Theme.panelWidth)
+        .background(Theme.surfaceRaised.opacity(Theme.panelOpacity))
         .onAppear { model.panelDidAppear() }
         .onDisappear { model.panelDidDisappear() }
     }
@@ -25,33 +25,28 @@ struct PanelView: View {
     private var header: some View {
         HStack(spacing: 8) {
             Text("Lokal")
-                .font(.headline)
+                .font(Theme.title)
+                .foregroundStyle(Theme.textAAA)
             Text(countLabel)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(Theme.body)
+                .foregroundStyle(Theme.textAA)
                 .contentTransition(.numericText())
             Spacer()
-            Button {
+            IconButton(symbol: "arrow.clockwise", title: "Refresh") {
                 Task { await model.refresh() }
-            } label: {
-                Image(systemName: "arrow.clockwise")
-                    .symbolEffect(.rotate, isActive: model.isRefreshing)
             }
-            .buttonStyle(.borderless)
-            .help("Refresh")
             .keyboardShortcut("r")
+            .symbolEffect(.rotate, isActive: model.isRefreshing)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.leading, 16)
+        .padding(.trailing, 12)
+        .padding(.top, 8)
+        .padding(.bottom, 12)
     }
 
     private var countLabel: String {
-        let base =
-            switch model.listeningCount {
-            case 0: "nothing listening"
-            case 1: "1 port"
-            case let count: "\(count) ports"
-            }
+        let count = model.listeningCount
+        let base = count == 0 ? "nothing listening" : count == 1 ? "1 port" : "\(count) ports"
         return model.hiddenCount > 0 ? "\(base) · \(model.hiddenCount) hidden" : base
     }
 
@@ -71,7 +66,6 @@ struct PanelView: View {
                         GroupSectionView(group: group)
                     }
                 }
-                .padding(.vertical, 4)
                 .onGeometryChange(for: CGFloat.self) {
                     $0.size.height
                 } action: {
@@ -85,29 +79,22 @@ struct PanelView: View {
     }
 
     private var footer: some View {
-        HStack(spacing: 12) {
+        HStack {
             SettingsLink {
-                Label("Settings", systemImage: "gearshape")
+                Text("Settings")
             }
+            .buttonStyle(CompactButtonStyle())
             .keyboardShortcut(",")
-
-            Button {
-                updaterModel.checkForUpdates()
-            } label: {
-                Label("Check for Updates", systemImage: "arrow.down.circle")
-            }
-            .disabled(!updaterModel.canCheckForUpdates)
 
             Spacer()
 
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
             }
+            .buttonStyle(CompactButtonStyle())
             .keyboardShortcut("q")
         }
-        .buttonStyle(.borderless)
-        .font(.callout)
         .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.top, 12)
     }
 }
