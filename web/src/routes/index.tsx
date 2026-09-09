@@ -2,10 +2,33 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '~/components/Button'
 import { CopyButton } from '~/components/CopyButton'
 import { MenuBarClock } from '~/components/MenuBarClock'
+import { siteURL, socialMeta } from '~/routes/__root'
 import { useEffect, useState } from 'react'
 import styles from '~/components/Home.module.css'
 
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Lokal',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'macOS 15 or later',
+  url: siteURL + '/',
+  downloadUrl: siteURL + '/download',
+  installUrl: siteURL + '/download',
+  softwareHelp: 'https://github.com/sigurdarson/lokal#readme',
+  license: 'https://opensource.org/licenses/MIT',
+  isAccessibleForFree: true,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: { '@type': 'Person', name: 'G. Sigurdarson', url: 'https://sigurdarson.is' },
+  description:
+    'A free, open source macOS menu bar app that lists your localhost ports, the process behind each one, and the project it belongs to.',
+}
+
 export const Route = createFileRoute('/')({
+  head: () => ({
+    ...socialMeta('Lokal: see what is running on localhost', structuredData.description, '/'),
+    scripts: [{ type: 'application/ld+json', children: JSON.stringify(structuredData) }],
+  }),
   component: Home,
 })
 

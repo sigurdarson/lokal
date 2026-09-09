@@ -1,11 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
 import styles from '~/components/Changelog.module.css'
 import { formatDate, parseChangelog, renderInline } from '~/lib/changelog'
+import { socialMeta } from '~/routes/__root'
 
 export const Route = createFileRoute('/changelog')({
-  head: () => ({
-    meta: [{ title: 'Lokal changelog' }],
-  }),
+  head: () =>
+    socialMeta(
+      'Lokal changelog',
+      'Release notes for Lokal, the macOS menu bar app for localhost ports. Generated from CHANGELOG.md.',
+      '/changelog',
+    ),
   component: Changelog,
 })
 
