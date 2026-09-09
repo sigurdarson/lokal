@@ -73,7 +73,7 @@ struct PanelView: View {
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
-            .scrollIndicators(.hidden)
+            .scrollIndicators(.never)
             .frame(height: min(contentHeight, maximumListHeight))
             .animation(.default, value: model.snapshot.groups.map(\.id))
         }
