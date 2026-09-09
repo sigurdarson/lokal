@@ -291,7 +291,12 @@ function Row({
           >
             <OpenGlyph />
           </a>
-          <button type="button" className={styles.iconButton} onClick={onRequestKill} aria-label={`Kill ${entry.label}`}>
+          <button
+            type="button"
+            className={`${styles.iconButton} ${styles.killButton}`}
+            onClick={onRequestKill}
+            aria-label={`Kill ${entry.label}`}
+          >
             <CloseGlyph />
           </button>
         </div>

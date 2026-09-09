@@ -39,6 +39,8 @@
 
   /* Decorative: separators and hairlines that carry no information */
   --border-decorative: var(--gray-200);
+  /* Hover wash over any surface. Light mirrors the dark value (gray-50 at 16%) with gray-950 at 6%. */
+  --surface-hover-decorative: color-mix(in oklch, var(--gray-950) 6%, transparent);
 
   --shadow-raised: 0 1.25rem 3rem oklch(0.145 0 0 / 0.14), 0 0.0625rem 0.125rem oklch(0.145 0 0 / 0.08);
 
@@ -92,7 +94,9 @@
 
   /* Motion */
   --duration-fast: 120ms;
+  --duration-pop: 260ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -112,6 +116,7 @@
     --nontext-aa: var(--gray-500);
 
     --border-decorative: var(--gray-800);
+    --surface-hover-decorative: color-mix(in oklch, var(--gray-50) 16%, transparent);
 
     --shadow-raised: 0 1.5rem 3.75rem oklch(0.145 0 0 / 0.55), 0 0.0625rem 0.125rem oklch(0.145 0 0 / 0.4);
   }

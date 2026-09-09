@@ -203,7 +203,7 @@
 }
 
 .row:hover {
-  background: var(--surface-sunken);
+  background: var(--surface-hover-decorative);
 }
 
 .rowText {
@@ -224,10 +224,6 @@
   border-radius: var(--radius-full);
   padding: 0.0625rem 0.375rem;
   color: var(--text-aa);
-}
-
-.row:hover .chip {
-  background: var(--surface-raised);
 }
 
 .rowDetail {
@@ -268,7 +264,24 @@
 
 .iconButton:hover {
   color: var(--text-aaa);
-  background: color-mix(in oklch, var(--surface-inverse) 10%, transparent);
+  background: var(--surface-hover-decorative);
+}
+
+.iconButton svg {
+  transition: transform var(--duration-pop) var(--ease-spring);
+}
+
+.iconButton:hover svg {
+  transform: scale(1.15);
+}
+
+/* The kill control winds up on hover and pops the capsule open on click. */
+.killButton:hover svg {
+  transform: scale(1.2) rotate(90deg);
+}
+
+.killButton:active svg {
+  transform: scale(0.9) rotate(90deg);
 }
 
 .killConfirm {
@@ -280,6 +293,19 @@
   border-radius: var(--radius-full);
   height: 1.5rem;
   overflow: hidden;
+  transform-origin: right center;
+  animation: pop var(--duration-pop) var(--ease-spring) both;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .killConfirmAction,
