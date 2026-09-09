@@ -3,7 +3,7 @@ import { Button } from '~/components/Button'
 import { CopyButton } from '~/components/CopyButton'
 import { MenuBarClock } from '~/components/MenuBarClock'
 import { siteURL, socialMeta } from '~/routes/__root'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from '~/components/Home.module.css'
 
 const structuredData = {
@@ -269,6 +269,7 @@ function Row({
   onCancel: () => void
   onConfirm: () => void
 }) {
+  const pressOpened = useRef(false)
   return (
     <div className={styles.row}>
       <div className={styles.rowText}>
@@ -307,10 +308,16 @@ function Row({
               // Open on mouse down so the morph starts with no perceptible delay, as in the app.
               if (!confirming) {
                 event.preventDefault()
+                pressOpened.current = true
                 onRequestKill()
               }
             }}
             onClick={() => {
+              // The release of the press that opened the capsule also fires click; ignore that one.
+              if (pressOpened.current) {
+                pressOpened.current = false
+                return
+              }
               if (confirming) onCancel()
             }}
             onKeyDown={(event) => {
