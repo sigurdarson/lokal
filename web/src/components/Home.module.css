@@ -68,6 +68,7 @@
 .screen {
   display: flex;
   flex-direction: column;
+  height: 32rem;
   background-color: var(--surface-sunken);
   background-image: image-set(url('/wallpaper-1400.webp') 1x, url('/wallpaper-2000.webp') 2x);
   background-size: cover;
