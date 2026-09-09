@@ -46,8 +46,7 @@ struct PanelView: View {
 
     private var countLabel: String {
         let count = model.listeningCount
-        let base = count == 0 ? "nothing listening" : count == 1 ? "1 port" : "\(count) ports"
-        return model.hiddenCount > 0 ? "\(base) · \(model.hiddenCount) hidden" : base
+        return count == 0 ? "nothing listening" : count == 1 ? "1 port" : "\(count) ports"
     }
 
     @ViewBuilder
