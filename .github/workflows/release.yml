@@ -54,6 +54,7 @@ jobs:
         working-directory: app
         run: |
           set -o pipefail
+          mkdir -p build
           xcodebuild archive \
             -project Lokal.xcodeproj -scheme Lokal -configuration Release \
             -archivePath build/Lokal.xcarchive \
