@@ -85,7 +85,9 @@
 
   /* Components */
   --button-height: 2.25rem;
+  --button-height-compact: 1.75rem;
   --button-padding-x: 0.75rem;
+  --button-padding-x-compact: 0.625rem;
   --button-radius: 0.5rem;
 
   /* Motion */

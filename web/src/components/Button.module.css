@@ -17,6 +17,12 @@
   transition: opacity var(--duration-fast) var(--ease-standard);
 }
 
+.compact {
+  height: var(--button-height-compact);
+  padding: 0 var(--button-padding-x-compact);
+  font-size: var(--font-size-xs);
+}
+
 .button[data-disabled] {
   opacity: 0.5;
   cursor: default;
