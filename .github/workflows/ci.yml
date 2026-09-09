@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_26.6.app
+
+jobs:
+  pr-title:
+    name: Conventional PR title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          scopes: |
+            core
+            app
+            web
+            release
+            homebrew
+            ci
+            deps
+          requireScope: false
+
+  core:
+    name: LokalCore (lint, build, test)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+      - name: Toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Lint
+        run: swift format lint --strict --recursive --configuration .swift-format app/LokalCore/Sources app/LokalCore/Tests app/LokalCore/Package.swift
+      - name: Test
+        working-directory: app/LokalCore
+        run: swift test --parallel
