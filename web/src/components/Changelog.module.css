@@ -1,0 +1,37 @@
+.page {
+  max-width: 44em;
+  padding: 56px 0 0;
+}
+
+.page h1 {
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.intro {
+  color: var(--fg-muted);
+  margin-bottom: 32px;
+}
+
+.body h2 {
+  font-size: 22px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.body h3 {
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+  margin-top: 20px;
+}
+
+.body ul {
+  padding-left: 1.2em;
+}
+
+.body li {
+  margin: 6px 0;
+}
