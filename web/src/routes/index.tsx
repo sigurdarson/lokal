@@ -44,21 +44,17 @@ function Home() {
           </p>
         </div>
         <div className={styles.outcomesGrid}>
-          <Feature title="Every port, grouped by project">
-            Native process inspection finds each listening socket and resolves its working directory to the nearest
-            manifest and git root, so <code>node</code> on 5173 reads as <em>shop / web</em>.
+          <Feature title="Grouped by project">
+            Each port resolves to its manifest and git root, so <code>node</code> on 5173 reads as <em>shop / web</em>.
           </Feature>
           <Feature title="Knows your services">
-            Postgres, MySQL, Redis, Mongo, Vite, Next.js, Rails, Django, and Docker or OrbStack containers get a name
-            and the right URL. Definitions live in one JSON file anyone can extend.
+            Postgres, Redis, Vite, Rails, Docker containers and more, from one JSON file anyone can extend.
           </Feature>
           <Feature title="Actions without a terminal">
-            Open in the browser, copy the URL, reveal in Finder, open in your editor or terminal, and kill the process
-            with an inline confirmation instead of a dialog.
+            Open, copy the URL, reveal in Finder, open in your editor, or kill with an inline confirmation.
           </Feature>
           <Feature title="Quiet by default">
-            Debug inspectors, internal sockets and apps like Spotify fold away. Lokal scans when you open it, sleeps
-            when you close it, and never phones home.
+            Inspectors, internal sockets and apps like Spotify fold away. No background polling, no telemetry.
           </Feature>
         </div>
       </section>
