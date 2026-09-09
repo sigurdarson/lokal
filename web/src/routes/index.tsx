@@ -123,7 +123,9 @@ function Showcase() {
             <span className={styles.clock}>Tue 9 Sep 14:32</span>
           </div>
         </div>
-        <MockPanel />
+        <div className={styles.desktop}>
+          <MockPanel />
+        </div>
       </div>
     </div>
   )
