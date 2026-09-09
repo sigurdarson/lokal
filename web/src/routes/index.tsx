@@ -33,30 +33,32 @@ function Home() {
 
       <Showcase />
 
-      <section className={styles.section} id="what-it-does">
-        <h2 className={styles.sectionTitle}>What it does</h2>
-        <div className={styles.features}>
-          <Feature title="Every listening port">
-            Native process inspection through libproc. No <code>lsof</code>, no shell, no polling in the background
-            unless you ask for the menu bar count.
-          </Feature>
-          <Feature title="Grouped by project">
-            Lokal resolves the working directory to the nearest manifest and git root, so <code>node</code> on 5173
-            becomes <em>shop / web</em>.
+      <section className={styles.outcomes} id="what-it-does">
+        <div className={styles.outcomesIntro}>
+          <p className={styles.eyebrowLabel}>What it does</p>
+          <h2 className={styles.outcomesTitle}>Everything listening, with the context you actually need.</h2>
+          <p className={styles.outcomesLede}>
+            Dev servers, databases, containers and the odd forgotten process pile up over a day. Lokal shows what is
+            listening, which project each port belongs to, and puts the actions you would otherwise open a terminal
+            for one click away.
+          </p>
+        </div>
+        <div className={styles.outcomesGrid}>
+          <Feature title="Every port, grouped by project">
+            Native process inspection finds each listening socket and resolves its working directory to the nearest
+            manifest and git root, so <code>node</code> on 5173 reads as <em>shop / web</em>.
           </Feature>
           <Feature title="Knows your services">
-            Postgres, MySQL, Redis, Mongo, Vite, Next.js, Rails, Django, Docker and OrbStack containers, and more.
-            Definitions live in one JSON file that anyone can extend.
+            Postgres, MySQL, Redis, Mongo, Vite, Next.js, Rails, Django, and Docker or OrbStack containers get a name
+            and the right URL. Definitions live in one JSON file anyone can extend.
           </Feature>
-          <Feature title="Actions that matter">
-            Open in browser, copy URL, reveal in Finder, open in your editor or terminal, and kill the process with an
-            inline confirmation instead of a dialog.
+          <Feature title="Actions without a terminal">
+            Open in the browser, copy the URL, reveal in Finder, open in your editor or terminal, and kill the process
+            with an inline confirmation instead of a dialog.
           </Feature>
-          <Feature title="Stays out of the way">
-            A single menu bar icon. Scans when you open it, sleeps when you close it. Launch at login is a toggle.
-          </Feature>
-          <Feature title="Honest software">
-            MIT licensed. The only network request is the update check, and you can turn that off.
+          <Feature title="Quiet by default">
+            Debug inspectors, internal sockets and apps like Spotify fold away. Lokal scans when you open it, sleeps
+            when you close it, and never phones home.
           </Feature>
         </div>
       </section>
@@ -89,9 +91,9 @@ function Home() {
 
 function Feature({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={styles.feature}>
-      <h3>{title}</h3>
-      <p>{children}</p>
+    <div className={styles.outcome}>
+      <h3 className={styles.outcomeTitle}>{title}</h3>
+      <p className={styles.outcomeBody}>{children}</p>
     </div>
   )
 }

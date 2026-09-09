@@ -343,25 +343,68 @@
   margin-bottom: var(--space-5);
 }
 
-.features {
+/* Outcomes: intro on the left, a borderless two-by-two grid on the right */
+.outcomes {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+  gap: var(--space-12) var(--space-16);
+  padding: var(--space-20) 0 0;
 }
 
-.feature {
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  background: var(--surface-raised);
+@media (max-width: 54rem) {
+  .outcomes {
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    padding-top: var(--space-16);
+  }
 }
 
-.feature h3 {
-  font-size: var(--font-size-base);
+.outcomesIntro {
+  max-width: 26rem;
+}
+
+.eyebrowLabel {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  margin-bottom: 0.375rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-aa);
 }
 
-.feature p {
+.outcomesTitle {
+  font-size: var(--font-size-3xl);
+  font-weight: 650;
+  letter-spacing: var(--tracking-display);
+  margin-bottom: var(--space-4);
+}
+
+.outcomesLede {
+  margin: 0;
+  color: var(--text-muted-aaa);
+}
+
+.outcomesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-10) var(--space-10);
+  align-content: start;
+}
+
+@media (max-width: 40rem) {
+  .outcomesGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}
+
+.outcomeTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+}
+
+.outcomeBody {
   margin: 0;
   color: var(--text-muted-aaa);
   font-size: var(--font-size-sm);
