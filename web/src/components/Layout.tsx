@@ -22,7 +22,7 @@ export function Header() {
           <Button
             variant="secondary"
             size="compact"
-            render={<a href="https://github.com/sigurdarson/lokal" />}
+            render={<a href="https://github.com/sigurdarson/lokal" target="_blank" rel="noreferrer" />}
             title={latest ? `Version ${latest.version}, released ${latest.date}` : 'Lokal on GitHub'}
           >
             <GitHubGlyph />
@@ -42,10 +42,18 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <span>MIT licensed. No accounts, no telemetry.</span>
-      <a href="https://github.com/sigurdarson/lokal">Source</a>
-      <a href="https://github.com/sigurdarson/lokal/issues">Issues</a>
-      <a href="https://github.com/sigurdarson/lokal/security/policy">Security</a>
-      <a href="https://sigurdarson.is">Made by G. Sigurdarson</a>
+      <a href="https://github.com/sigurdarson/lokal" target="_blank" rel="noreferrer">
+        Source
+      </a>
+      <a href="https://github.com/sigurdarson/lokal/issues" target="_blank" rel="noreferrer">
+        Issues
+      </a>
+      <a href="https://github.com/sigurdarson/lokal/security/policy" target="_blank" rel="noreferrer">
+        Security
+      </a>
+      <a href="https://sigurdarson.is" target="_blank" rel="noreferrer">
+        Made by G. Sigurdarson
+      </a>
     </footer>
   )
 }
