@@ -158,7 +158,6 @@ const mockEntries: MockEntry[] = [
 ]
 
 const groups = ['lokal', 'storefront', 'Containers', 'Services']
-const hiddenPerGroup: Record<string, number> = { lokal: 2, storefront: 3 }
 const hiddenTotal = 27
 
 /** A working miniature of the panel. Kill asks for confirmation, removes the row, and everything comes back later. */
@@ -210,7 +209,6 @@ function MockPanel() {
                 }}
               />
             ))}
-            {hiddenPerGroup[group] ? <div className={styles.more}>{hiddenPerGroup[group]} hidden ports</div> : null}
           </div>
         )
       })}
