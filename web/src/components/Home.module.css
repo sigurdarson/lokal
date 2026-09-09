@@ -89,7 +89,6 @@
   padding: 0 var(--space-4) 0 var(--space-5);
   background: color-mix(in oklch, var(--surface-raised) 72%, transparent);
   backdrop-filter: blur(1.25rem);
-  -webkit-backdrop-filter: blur(1.25rem);
   font-size: var(--font-size-sm);
   color: var(--text-aaa);
 }
@@ -154,7 +153,6 @@
   max-width: 100%;
   background: color-mix(in oklch, var(--surface-raised) 92%, transparent);
   backdrop-filter: blur(1.5rem) saturate(140%);
-  -webkit-backdrop-filter: blur(1.5rem) saturate(140%);
   border: var(--border-width) solid var(--border-decorative);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-raised);
