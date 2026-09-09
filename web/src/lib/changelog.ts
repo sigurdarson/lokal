@@ -1,6 +1,18 @@
 import { marked } from 'marked'
 import changelogMarkdown from '../../../CHANGELOG.md?raw'
 
+// External links inside entries open in a new tab, like every other external link on the site.
+marked.use({
+  renderer: {
+    link({ href, title, tokens }) {
+      const text = this.parser.parseInline(tokens)
+      const external = /^https?:\/\//.test(href) && !href.startsWith('https://lokal.sigurdarson.is')
+      const attributes = [`href="${href}"`, title ? `title="${title}"` : '', external ? 'target="_blank" rel="noreferrer"' : '']
+      return `<a ${attributes.filter(Boolean).join(' ')}>${text}</a>`
+    },
+  },
+})
+
 export type ReleaseSection = { title: string; items: string[] }
 export type Release = { version: string; date?: string; url?: string; sections: ReleaseSection[] }
 

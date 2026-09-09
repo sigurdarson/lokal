@@ -23,7 +23,10 @@ function Changelog() {
         <h1 className={styles.title}>What changed, release by release.</h1>
         <p className={styles.lede}>
           Lokal follows semantic versioning and updates itself through Sparkle. This page is generated from{' '}
-          <a href="https://github.com/sigurdarson/lokal/blob/main/CHANGELOG.md">CHANGELOG.md</a> at build time.
+          <a href="https://github.com/sigurdarson/lokal/blob/main/CHANGELOG.md" target="_blank" rel="noreferrer">
+            CHANGELOG.md
+          </a>{' '}
+          at build time.
         </p>
       </header>
 
@@ -36,7 +39,11 @@ function Changelog() {
               </h2>
               <div className={styles.releaseMeta}>
                 {release.date ? <time dateTime={release.date}>{formatDate(release.date)}</time> : <span>In progress</span>}
-                {release.url ? <a href={release.url}>View on GitHub</a> : null}
+                {release.url ? (
+                  <a href={release.url} target="_blank" rel="noreferrer">
+                    View on GitHub
+                  </a>
+                ) : null}
               </div>
             </div>
             {release.sections.map((section) => (
