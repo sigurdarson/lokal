@@ -7,8 +7,6 @@ struct PortRowView: View {
     @Environment(AppModel.self) private var model
     let entry: PortEntry
 
-    @State private var hovering = false
-
     private var killState: KillState? { model.killStates[entry.id] }
 
     var body: some View {
@@ -62,10 +60,7 @@ struct PortRowView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 7)
-        .background(hovering ? Theme.surfaceHoverDecorative : Color.clear)
-        .contentShape(Rectangle())
-        .onHover { hovering = $0 }
-        .animation(Theme.fast, value: hovering)
+        .hoverWash()
         .onTapGesture(count: 2) { model.open(entry) }
         .contextMenu { menuItems }
         .accessibilityElement(children: .contain)

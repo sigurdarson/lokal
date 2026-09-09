@@ -66,6 +66,18 @@ final class AppModel {
         expandedGroups.contains(groupID)
     }
 
+    func isCollapsed(_ groupID: String) -> Bool {
+        preferences.collapsedGroups.contains(groupID)
+    }
+
+    func toggleCollapsed(_ groupID: String) {
+        if preferences.collapsedGroups.contains(groupID) {
+            preferences.collapsedGroups.remove(groupID)
+        } else {
+            preferences.collapsedGroups.insert(groupID)
+        }
+    }
+
     func toggleExpanded(_ groupID: String) {
         if expandedGroups.contains(groupID) {
             expandedGroups.remove(groupID)
