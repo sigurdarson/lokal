@@ -59,28 +59,6 @@ function Home() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Install</h2>
-        <ol className={styles.steps}>
-          <li>
-            <span>
-              <strong>Install</strong> with <code>{brew}</code>, or download the <a href="/download">.dmg</a> and
-              drag Lokal to Applications.
-            </span>
-          </li>
-          <li>
-            <span>
-              <strong>Open Lokal.</strong> It lives in the menu bar; there is no Dock icon.
-            </span>
-          </li>
-          <li>
-            <span>
-              <strong>Start something.</strong> A dev server, a database, a container. It shows up within a couple of
-              seconds while the panel is open.
-            </span>
-          </li>
-        </ol>
-      </section>
     </>
   )
 }
