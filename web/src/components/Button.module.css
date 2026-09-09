@@ -15,6 +15,7 @@
   text-decoration: none;
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-standard);
+  will-change: opacity;
 }
 
 .compact {
