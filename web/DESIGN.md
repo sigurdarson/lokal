@@ -62,6 +62,8 @@ Current assignments and their worst-case ratios:
 ## Motion
 
 - Use `--duration-fast` and `--ease-standard`. `global.css` disables animation and transitions under `prefers-reduced-motion: reduce`; do not override that.
+- Anything with a `transition` or `animation` declares `will-change` for the same properties, so the browser promotes it before the first frame.
+- `--ease-spring` overshoots. Use it for transform and width, never for border-radius or opacity, which clamp at their limits and flash.
 
 ## Adding a token
 

@@ -203,6 +203,7 @@
   text-align: left;
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-standard);
+  will-change: background-color;
 }
 
 .group:hover {
@@ -211,6 +212,7 @@
 
 .groupChevron {
   transition: transform var(--duration-fast) var(--ease-standard);
+  will-change: transform;
 }
 
 .groupChevronFolded {
@@ -229,6 +231,7 @@
   gap: var(--space-3);
   padding: 0.4375rem var(--space-4);
   transition: background-color var(--duration-fast) var(--ease-standard);
+  will-change: background-color;
 }
 
 .row:hover {
@@ -293,6 +296,7 @@
     opacity var(--duration-fast) var(--ease-standard),
     width var(--duration-pop) var(--ease-spring),
     margin var(--duration-pop) var(--ease-spring);
+  will-change: opacity, width, margin;
 }
 
 .iconButton:hover {
@@ -302,6 +306,7 @@
 
 .iconButton svg {
   transition: transform var(--duration-pop) var(--ease-spring);
+  will-change: transform;
 }
 
 .iconButton:hover svg {
@@ -326,11 +331,13 @@
   background: transparent;
   color: var(--nontext-aa);
   overflow: hidden;
+  /* The spring overshoots; a radius below zero clamps to a square corner, so the radius uses the plain ease. */
   transition:
     width var(--duration-pop) var(--ease-spring),
-    border-radius var(--duration-pop) var(--ease-spring),
+    border-radius var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
+  will-change: width, border-radius, background-color;
 }
 
 .killControl:hover {
@@ -340,7 +347,7 @@
 
 .killConfirming,
 .killConfirming:hover {
-  width: 4.25rem;
+  width: 3.75rem;
   border-radius: var(--radius-full);
   background: var(--surface-inverse);
   color: var(--text-on-inverse-aaa);
@@ -362,11 +369,12 @@
 
 .killAction {
   flex: 1;
-  padding-left: 0.625rem;
+  padding-left: 0.5rem;
   font-size: 0.6875rem;
   font-weight: 600;
   white-space: nowrap;
   animation: slideIn var(--duration-pop) var(--ease-spring) both;
+  will-change: transform, opacity;
 }
 
 .killAction:hover {
@@ -393,6 +401,7 @@
   transition:
     transform var(--duration-pop) var(--ease-spring),
     opacity var(--duration-fast) var(--ease-standard);
+  will-change: transform, opacity;
 }
 
 .killControl:not(.killConfirming):hover .killToggle svg {
