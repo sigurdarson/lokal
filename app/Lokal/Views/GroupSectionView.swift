@@ -33,7 +33,6 @@ struct GroupSectionView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
                 .padding(.bottom, 4)
-                .background(Theme.surfaceRaised.opacity(Theme.panelOpacity))
         }
     }
 

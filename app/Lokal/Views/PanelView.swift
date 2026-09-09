@@ -61,7 +61,7 @@ struct PanelView: View {
             EmptyStateView()
         } else {
             ScrollView {
-                LazyVStack(spacing: 0, pinnedViews: .sectionHeaders) {
+                LazyVStack(spacing: 0) {
                     ForEach(model.snapshot.groups) { group in
                         GroupSectionView(group: group)
                     }
