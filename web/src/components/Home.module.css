@@ -326,9 +326,10 @@
   background: transparent;
   color: var(--nontext-aa);
   overflow: hidden;
+  /* The spring overshoots; a radius below zero clamps to a square corner, so the radius uses the plain ease. */
   transition:
     width var(--duration-pop) var(--ease-spring),
-    border-radius var(--duration-pop) var(--ease-spring),
+    border-radius var(--duration-fast) var(--ease-standard),
     background-color var(--duration-fast) var(--ease-standard),
     color var(--duration-fast) var(--ease-standard);
 }
