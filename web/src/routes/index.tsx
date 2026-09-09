@@ -44,7 +44,9 @@ function Home() {
           Open it, copy the URL, jump to the code, or kill it.
         </p>
         <div className={styles.actions}>
-          <Button render={<a href="/download" />}>Download for macOS</Button>
+          <Button render={<a href="/download" />} data-umami-event="download">
+            Download for macOS
+          </Button>
           <div className={styles.brew}>
             <span>$</span>
             <code>{brew}</code>
