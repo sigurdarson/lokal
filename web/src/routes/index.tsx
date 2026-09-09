@@ -139,7 +139,7 @@ function BatteryGlyph() {
 
 type MockEntry = {
   id: string
-  group: 'shop' | 'Containers' | 'Services'
+  group: string
   label: string
   chip?: string
   detail: string
@@ -147,14 +147,19 @@ type MockEntry = {
 }
 
 const mockEntries: MockEntry[] = [
-  { id: 'vite', group: 'shop', label: 'Vite', chip: 'web', detail: 'node · 48211', port: '5173' },
-  { id: 'rails', group: 'shop', label: 'Rails', chip: 'api', detail: 'puma · 48090', port: '3000' },
-  { id: 'db', group: 'Containers', label: 'shop-db', detail: 'postgres:16', port: '5433' },
-  { id: 'pg', group: 'Services', label: 'Postgres', detail: 'postgres · 812', port: '5432' },
-  { id: 'redis', group: 'Services', label: 'Redis', detail: 'redis-server · 815', port: '6379' },
+  { id: 'lokal-web', group: 'lokal', label: 'Vite', chip: 'web', detail: 'node · 62114', port: '5173' },
+  { id: 'lokal-preview', group: 'lokal', label: 'Wrangler', chip: 'web', detail: 'workerd · 62201', port: '4179' },
+  { id: 'store-web', group: 'storefront', label: 'Next.js', chip: 'web', detail: 'next-server · 40312', port: '3000' },
+  { id: 'store-api', group: 'storefront', label: 'Rails', chip: 'api', detail: 'puma · 40388', port: '3001' },
+  { id: 'store-db', group: 'Containers', label: 'storefront-db', detail: 'postgres:16', port: '5433' },
+  { id: 'store-redis', group: 'Containers', label: 'storefront-redis', detail: 'redis:7', port: '6380' },
+  { id: 'postgres', group: 'Services', label: 'Postgres', detail: 'postgres · 812', port: '5432' },
+  { id: 'ollama', group: 'Services', label: 'Ollama', detail: 'ollama · 1190', port: '11434' },
 ]
 
-const groups: MockEntry['group'][] = ['shop', 'Containers', 'Services']
+const groups = ['lokal', 'storefront', 'Containers', 'Services']
+const hiddenPerGroup: Record<string, number> = { lokal: 2, storefront: 3 }
+const hiddenTotal = 27
 
 /** A working miniature of the panel. Kill asks for confirmation, removes the row, and everything comes back later. */
 function MockPanel() {
@@ -180,7 +185,7 @@ function MockPanel() {
       <div className={styles.panelHeader}>
         <span className={styles.panelTitle}>Lokal</span>
         <span className={styles.panelCount}>
-          {visible.length} {visible.length === 1 ? 'port' : 'ports'} · 12 hidden
+          {visible.length} {visible.length === 1 ? 'port' : 'ports'} · {hiddenTotal} hidden
         </span>
         <span className={styles.panelRefresh} aria-hidden="true">
           <RefreshGlyph />
@@ -205,7 +210,7 @@ function MockPanel() {
                 }}
               />
             ))}
-            {group === 'shop' ? <div className={styles.more}>2 hidden ports</div> : null}
+            {hiddenPerGroup[group] ? <div className={styles.more}>{hiddenPerGroup[group]} hidden ports</div> : null}
           </div>
         )
       })}
