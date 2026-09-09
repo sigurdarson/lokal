@@ -58,13 +58,7 @@ final class AppModel {
         preferences.showsAuxiliaryPorts ? 0 : snapshot.auxiliaryCount
     }
 
-    // MARK: - Auxiliary port disclosure
-
-    private(set) var expandedGroups: Set<String> = []
-
-    func isExpanded(_ groupID: String) -> Bool {
-        expandedGroups.contains(groupID)
-    }
+    // MARK: - Group folding
 
     func isCollapsed(_ groupID: String) -> Bool {
         preferences.collapsedGroups.contains(groupID)
@@ -75,14 +69,6 @@ final class AppModel {
             preferences.collapsedGroups.remove(groupID)
         } else {
             preferences.collapsedGroups.insert(groupID)
-        }
-    }
-
-    func toggleExpanded(_ groupID: String) {
-        if expandedGroups.contains(groupID) {
-            expandedGroups.remove(groupID)
-        } else {
-            expandedGroups.insert(groupID)
         }
     }
 
