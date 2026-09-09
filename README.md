@@ -7,9 +7,9 @@ Click the menu bar icon and Lokal lists every listening port on your machine, th
 Free and open source (MIT). No accounts, no sign-in, no telemetry. The only network traffic is the Sparkle update check.
 
 <p align="center">
-  <img src="web/public/screenshot.png" alt="Lokal panel showing listening ports grouped by project" width="420">
+  <img src="web/public/screenshot.svg" alt="Lokal panel showing listening ports grouped by project" width="420">
   <br>
-  <sub>Screenshot placeholder. Replaced before 1.0.</sub>
+  <sub>Placeholder illustration. A real screenshot lands before 1.0.</sub>
 </p>
 
 ## Install
