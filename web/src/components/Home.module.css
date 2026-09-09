@@ -340,7 +340,7 @@
 
 .killConfirming,
 .killConfirming:hover {
-  width: 4.25rem;
+  width: 3.75rem;
   border-radius: var(--radius-full);
   background: var(--surface-inverse);
   color: var(--text-on-inverse-aaa);
@@ -362,7 +362,7 @@
 
 .killAction {
   flex: 1;
-  padding-left: 0.625rem;
+  padding-left: 0.5rem;
   font-size: 0.6875rem;
   font-weight: 600;
   white-space: nowrap;
